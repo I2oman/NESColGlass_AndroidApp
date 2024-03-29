@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NESCol Glass</string>
+    <string name="not_connected_prev">Not connnected</string>
+    <string name="connect_on_startup_prev">Connect on startup</string>
+    <string name="number_prev">888</string>
+    <string name="device_name_prev">Device Name</string>
+    <string name="device_address_prev">00:00:00:00:00:00</string>
+</resources>
