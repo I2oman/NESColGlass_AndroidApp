@@ -2,7 +2,6 @@ package com.example.nescolglass;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> {
-    private final RecyclerViewInterface recyclerViewInterface;
+    private static RecyclerViewInterface recyclerViewInterface;
     private ArrayList<BluetoothDevice> list;
 
 

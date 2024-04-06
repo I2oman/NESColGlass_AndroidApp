@@ -12,6 +12,10 @@ public class Globals {
     public static final int STATE_DISCONNECTED = 7;
     public static final int STATE_DISCONNECTED_SUCCESS = 8;
     public static final int STATE_DISCONNECTED_ERROR = 9;
-    public static final String APP_NAME = "Remote Touchpad";
+    public static final String APP_NAME = "NESCOl_Glass";
     public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    public static final String SHARED_PREFS = "NSG_SHARED_PREFERENCES";
+    public static final String CONSTART = "CONNECT_ON_STARTUP";
+    public static final String LASTDEVADDR = "LAST_CONNECTED_DEVICE_ADDRESS";
+
 }

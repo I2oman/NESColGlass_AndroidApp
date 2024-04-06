@@ -29,6 +29,14 @@
                 android:includeFontPadding="false"
                 android:onClick="bondedDevices"
                 android:text="@string/not_connected_prev" />
+
+            <CheckBox
+                android:id="@+id/constart_chkb"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:onClick="constart_void"
+                android:text="@string/connect_on_startup_prev" />
         </LinearLayout>
     </LinearLayout>
 

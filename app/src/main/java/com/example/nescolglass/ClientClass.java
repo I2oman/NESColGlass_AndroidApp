@@ -18,9 +18,9 @@ import android.util.Log;
 import java.io.IOException;
 
 public class ClientClass extends Thread {
-    private BluetoothDevice device;
-    private BluetoothSocket socket;
-    public static Handler handler;
+    private static BluetoothDevice device;
+    private static BluetoothSocket socket;
+    public Handler handler;
 
     @SuppressLint("MissingPermission")
     public ClientClass(BluetoothDevice device, Handler handler) {

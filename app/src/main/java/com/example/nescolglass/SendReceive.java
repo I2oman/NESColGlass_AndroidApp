@@ -14,15 +14,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class SendReceive extends Thread {
-    private final BluetoothSocket bluetoothSocket;
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
-    public static Handler handler;
+    private  BluetoothSocket bluetoothSocket;
+    private static InputStream inputStream;
+    private static OutputStream outputStream;
+    public Handler handler;
 
 
     public SendReceive(BluetoothSocket socket, Handler handler) {
         this.handler = handler;
-        bluetoothSocket = socket;
+        this.bluetoothSocket = socket;
         InputStream tempIn = null;
         OutputStream tempOut = null;
 
@@ -69,6 +69,14 @@ public class SendReceive extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("System.out.println()", "Error occurred when sending data", e);
+        }
+    }
+
+    public String getADDR(){
+        if (bluetoothSocket != null) {
+            return bluetoothSocket.getRemoteDevice().getAddress();
+        } else {
+            return "";
         }
     }
 

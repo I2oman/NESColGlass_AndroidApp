@@ -1,15 +1,7 @@
 package com.example.nescolglass;
 
-import static com.example.nescolglass.Globals.STATE_CONNECTED;
-import static com.example.nescolglass.Globals.STATE_CONNECTING;
-import static com.example.nescolglass.Globals.STATE_CONNECTION_FAILED;
-import static com.example.nescolglass.Globals.STATE_DISCONNECTED;
-import static com.example.nescolglass.Globals.STATE_DISCONNECTED_ERROR;
-import static com.example.nescolglass.Globals.STATE_DISCONNECTED_SUCCESS;
-import static com.example.nescolglass.Globals.STATE_LISTENING;
-import static com.example.nescolglass.Globals.STATE_MESSAGE_RECEIVED;
-import static com.example.nescolglass.Globals.STATE_MESSAGE_SENT;
-import static com.example.nescolglass.Globals.MY_UUID;
+import static com.example.nescolglass.Globals.*;
+import static com.example.nescolglass.LocalStorage.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -28,26 +20,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
+    private LocalStorage localStorage;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
     public static SendReceive sendReceive;
     private Button connecting_btn;
+    private CheckBox constart_chkb;
     private CardView cardView;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
@@ -59,14 +48,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     private EditText textToDisplay;
     private Button sentBtn;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        localStorage = new LocalStorage(this);
+
         Log.i("System.out.println()", "String.valueOf(MY_UUID)");
 
         connecting_btn = findViewById(R.id.connecting_btn);
+        constart_chkb = findViewById(R.id.constart_chkb);
         cardView = findViewById(R.id.cardView);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
@@ -82,12 +75,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         accessPermission();
 
+        applyPrefs();
         setAddapter(devices);
 
-        Log.i("System.out.println()", String.valueOf(MY_UUID));
+//        Log.i("System.out.println()", String.valueOf(MY_UUID));
+        showPrefs();
     }
 
-    Handler handler = new Handler(msg -> {
+    private void applyPrefs() {
+        constart_chkb.setChecked(getPrefs(CONSTART, Boolean.class));
+        if (constart_chkb.isChecked()) {
+            for (BluetoothDevice device : getbondedDevices()) {
+                if (device.getAddress().equals(getPrefs(LASTDEVADDR, String.class))) {
+                    connectDevice(device);
+                    break;
+                }
+            }
+        }
+    }
+
+    public Handler handler = new Handler(msg -> {
         switch (msg.what) {
             case STATE_LISTENING:
                 Log.i("System.out.println()", "STATE_LISTENING");
@@ -97,9 +104,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 break;
             case STATE_CONNECTED:
                 Log.i("System.out.println()", "STATE_CONNECTED");
+                Toast.makeText(getApplicationContext(), "Successfully connected", Toast.LENGTH_SHORT).show();
                 connecting_btn.setBackgroundColor(getColor(R.color.green));
                 progressBar.setVisibility(View.INVISIBLE);
                 cardView.setVisibility(View.INVISIBLE);
+                putPrefs(LASTDEVADDR, sendReceive.getADDR());
+//                putPrefs(LASTDEVADDR, sendReceive.getName());
                 break;
             case STATE_CONNECTION_FAILED:
                 Toast.makeText(getApplicationContext(), "Connection FAILED", Toast.LENGTH_SHORT).show();
@@ -147,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             setAddapter(devices);
             cardView.setVisibility(View.VISIBLE);
             setAddapter(devices = getbondedDevices());
+            Log.i("System.out.println()", String.valueOf(devices));
 //            progressBar.setVisibility(View.VISIBLE);
 //            progressBar.setVisibility(View.INVISIBLE);
         }
@@ -161,22 +172,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                bondedDevices.add(device);
-            }
+            bondedDevices.addAll(pairedDevices);
         }
 
         return bondedDevices;
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     public void onItemClick(int position) {
-        BluetoothDevice sel_dev = devices.get(position);
+        connectDevice(devices.get(position));
+    }
+
+    @SuppressLint("MissingPermission")
+    private void connectDevice(BluetoothDevice selected_dev) {
+        putPrefs(LASTDEVADDR, selected_dev.getAddress());
         Toast.makeText(getApplicationContext(),
-                "Connecting to \"" + sel_dev.getName() + "\" - " + sel_dev.getAddress(),
+                "Connecting to \"" + selected_dev.getName() + "\" - " + selected_dev.getAddress(),
                 Toast.LENGTH_SHORT).show();
-        ClientClass clientClass = new ClientClass(sel_dev, handler);
+        ClientClass clientClass = new ClientClass(selected_dev, handler);
         clientClass.start();
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -210,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         formattedText += ",c:";
         if (inverColorCheckBox.isChecked()) {
             formattedText += "1";
-        }else{
+        } else {
             formattedText += "0";
         }
         formattedText += ",X:";
@@ -221,5 +234,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         formattedText += textToDisplay.getText().toString();
         formattedText += ";";
         sendReceive.write(formattedText.getBytes());
+    }
+
+    public void constart_void(View view) {
+        putPrefs(CONSTART, constart_chkb.isChecked());
     }
 }
