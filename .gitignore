@@ -14,5 +14,5 @@
 .cxx
 local.properties
 
-/gradle/
 /.idea/
+/gradle/wrapper/gradle-wrapper.jar
