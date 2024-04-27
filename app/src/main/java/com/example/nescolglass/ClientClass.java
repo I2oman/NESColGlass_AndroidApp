@@ -1,19 +1,12 @@
 package com.example.nescolglass;
 
-//import static com.example.nescolglass.Globals.MY_UUID;
-import static com.example.nescolglass.Globals.MY_UUID;
-import static com.example.nescolglass.Globals.STATE_CONNECTED;
-import static com.example.nescolglass.Globals.STATE_CONNECTION_FAILED;
-import static com.example.nescolglass.Globals.STATE_DISCONNECTED;
-import static com.example.nescolglass.Globals.STATE_DISCONNECTED_ERROR;
-import static com.example.nescolglass.Globals.STATE_DISCONNECTED_SUCCESS;
+import static com.example.nescolglass.Globals.*;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -29,9 +22,16 @@ public class ClientClass extends Thread {
 
         try {
             socket = this.device.createRfcommSocketToServiceRecord(MY_UUID);
+
+            Message message = Message.obtain();
+            message.what = STATE_CONNECTING;
+            handler.sendMessage(message);
         } catch (IOException e) {
-            Log.i("System.out.println()", "Socket's create() method failed", e);
-            e.printStackTrace();
+//            Log.i("System.out.println()", "Socket's create() method failed", e);
+//            e.printStackTrace();
+            Message message = Message.obtain();
+            message.what = SOCKET_FAIL;
+            handler.sendMessage(message);
         }
     }
 
@@ -47,7 +47,7 @@ public class ClientClass extends Thread {
             MainActivity.sendReceive = new SendReceive(socket, handler);
             MainActivity.sendReceive.start();
         } catch (IOException connectException) {
-            Log.i("System.out.println()", String.valueOf(connectException));
+//            Log.i("System.out.println()", String.valueOf(connectException));
             Message message = Message.obtain();
             message.what = STATE_CONNECTION_FAILED;
             handler.sendMessage(message);
@@ -82,7 +82,10 @@ public class ClientClass extends Thread {
             message.what = STATE_DISCONNECTED;
             handler.sendMessage(message);
         } catch (IOException e) {
-            Log.i("System.out.println()", "Could not close the client socket", e);
+//            Log.i("System.out.println()", "Could not close the client socket", e);
+            Message message = Message.obtain();
+            message.what = SOCKET_CLOSING_ERROR;
+            handler.sendMessage(message);
         }
     }
 }

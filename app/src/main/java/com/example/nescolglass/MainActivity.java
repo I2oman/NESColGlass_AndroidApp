@@ -15,10 +15,13 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
         localStorage = new LocalStorage(this);
 
-        Log.i("System.out.println()", "String.valueOf(MY_UUID)");
-
         connecting_btn = findViewById(R.id.connecting_btn);
         constart_chkb = findViewById(R.id.constart_chkb);
         cardView = findViewById(R.id.cardView);
@@ -73,14 +74,49 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         bluetoothManager = getSystemService(BluetoothManager.class);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
+//        Log.i("System.out.println()", bluetoothAdapter.getAddress());
+
         accessPermission();
 
         applyPrefs();
         setAddapter(devices);
 
 //        Log.i("System.out.println()", String.valueOf(MY_UUID));
-        showPrefs();
+//        showPrefs();
+
+        restartOrEnableNotificationListenerService();
     }
+
+    private void restartOrEnableNotificationListenerService() {
+        if (!isNotificationServiceEnabled()) {
+            // If the notification listener service is not enabled, launch settings to enable it
+            Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+            startActivity(intent);
+        } else {
+            // If the notification listener service is enabled, restart it
+            restartNotificationListenerService();
+        }
+    }
+
+    private boolean isNotificationServiceEnabled() {
+        ComponentName cn = new ComponentName(this, MyNotificationListenerService.class);
+        String flat = Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(cn.flattenToString());
+    }
+
+    private void restartNotificationListenerService() {
+        // Disable the notification listener service
+        ComponentName componentName = new ComponentName(this, MyNotificationListenerService.class);
+        getPackageManager().setComponentEnabledSetting(componentName,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+
+        // Re-enable the notification listener service
+        getPackageManager().setComponentEnabledSetting(componentName,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
 
     private void applyPrefs() {
         constart_chkb.setChecked(getPrefs(CONSTART, Boolean.class));
@@ -96,15 +132,34 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     public Handler handler = new Handler(msg -> {
         switch (msg.what) {
+            case INPUT_STREAM_DISCONNECT:
+                Log.w("System.out.println()", "Input stream was disconnected");
+                connecting_btn.setBackgroundColor(getColor(R.color.red));
+                connecting_btn.setText("Not connected");
+                progressBar.setVisibility(View.INVISIBLE);
+                break;
+            case INPUT_STREAM_FAIL:
+                Log.e("System.out.println()", "Error occurred when creating input stream");
+                break;
+            case OUTPUT_STREAM_FAIL:
+                Log.e("System.out.println()", "Error occurred when creating output stream");
+                break;
+            case SOCKET_FAIL:
+                Log.e("System.out.println()", "Socket's create() method failed");
+                break;
             case STATE_LISTENING:
                 Log.i("System.out.println()", "STATE_LISTENING");
                 break;
             case STATE_CONNECTING:
                 Log.i("System.out.println()", "STATE_CONNECTING");
+                connecting_btn.setText("Connecting...");
+                connecting_btn.setBackgroundColor(getColor(R.color.orange));
+                progressBar.setVisibility(View.VISIBLE);
                 break;
             case STATE_CONNECTED:
                 Log.i("System.out.println()", "STATE_CONNECTED");
                 Toast.makeText(getApplicationContext(), "Successfully connected", Toast.LENGTH_SHORT).show();
+                connecting_btn.setText("Connected");
                 connecting_btn.setBackgroundColor(getColor(R.color.green));
                 progressBar.setVisibility(View.INVISIBLE);
                 cardView.setVisibility(View.INVISIBLE);
@@ -114,7 +169,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             case STATE_CONNECTION_FAILED:
                 Toast.makeText(getApplicationContext(), "Connection FAILED", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
-                Log.i("System.out.println()", "STATE_CONNECTION_FAILED");
+                connecting_btn.setText("Not connected");
+                connecting_btn.setBackgroundColor(getColor(R.color.red));
+                Log.e("System.out.println()", "STATE_CONNECTION_FAILED");
+                break;
+            case SENDING_FAILURE:
+                Log.e("System.out.println()", "Error occurred when sending data");
                 break;
             case STATE_MESSAGE_RECEIVED:
                 byte[] readBuff = (byte[]) msg.obj;
@@ -126,13 +186,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
                 break;
             case STATE_DISCONNECTED:
                 Log.i("System.out.println()", "STATE_DISCONNECTED");
+                connecting_btn.setText("Not connected");
                 connecting_btn.setBackgroundColor(getColor(R.color.red));
                 break;
             case STATE_DISCONNECTED_SUCCESS:
                 Log.i("System.out.println()", "STATE_DISCONNECTED_SUCCESS");
                 break;
             case STATE_DISCONNECTED_ERROR:
-                Log.i("System.out.println()", "STATE_DISCONNECTED_ERROR");
+                Log.e("System.out.println()", "STATE_DISCONNECTED_ERROR");
+                break;
+            case SOCKET_CLOSING_ERROR:
+                Log.e("System.out.println()", "Could not close the client socket");
                 break;
         }
         return true;
@@ -157,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             setAddapter(devices);
             cardView.setVisibility(View.VISIBLE);
             setAddapter(devices = getbondedDevices());
-            Log.i("System.out.println()", String.valueOf(devices));
+//            Log.i("System.out.println()", String.valueOf(devices));
 //            progressBar.setVisibility(View.VISIBLE);
 //            progressBar.setVisibility(View.INVISIBLE);
         }
@@ -185,13 +249,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @SuppressLint("MissingPermission")
     private void connectDevice(BluetoothDevice selected_dev) {
-        putPrefs(LASTDEVADDR, selected_dev.getAddress());
         Toast.makeText(getApplicationContext(),
                 "Connecting to \"" + selected_dev.getName() + "\" - " + selected_dev.getAddress(),
                 Toast.LENGTH_SHORT).show();
         ClientClass clientClass = new ClientClass(selected_dev, handler);
         clientClass.start();
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void setAddapter(ArrayList<BluetoothDevice> list) {
@@ -207,7 +269,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     android.Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_SCAN
+                    android.Manifest.permission.BLUETOOTH_SCAN,
+                    android.Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
 
             }, 100);
         }
@@ -233,7 +296,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
         formattedText += ",t:";
         formattedText += textToDisplay.getText().toString();
         formattedText += ";";
-        sendReceive.write(formattedText.getBytes());
+        if (sendReceive.isConnected()) {
+            sendReceive.write(formattedText.getBytes());
+        }
     }
 
     public void constart_void(View view) {

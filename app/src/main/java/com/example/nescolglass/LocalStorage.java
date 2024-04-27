@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class LocalStorage {
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor prefsEditor;
