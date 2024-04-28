@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/orange"
-    tools:context=".homeFragment">
+    tools:context=".HomePage">
 
 
     <!-- Color seems to only exist in 4 forms I have no idea how to fix this. -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/home_fragment"
-        android:textSize="26sp"
-        android:layout_gravity="center"/>
+        android:textSize="26sp" />
 
 </FrameLayout>
