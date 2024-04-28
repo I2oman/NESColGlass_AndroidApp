@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/orange"
+    tools:context=".homeFragment">
+
+
+    <!-- Color seems to only exist in 4 forms I have no idea how to fix this. -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_fragment"
+        android:textSize="26sp"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

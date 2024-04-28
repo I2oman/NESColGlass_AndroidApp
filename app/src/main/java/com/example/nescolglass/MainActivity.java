@@ -6,6 +6,9 @@ import static com.example.nescolglass.LocalStorage.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,10 +33,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.nescolglass.databinding.ActivityMainBinding;
+
 import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface {
+    ActivityMainBinding binding;
     private LocalStorage localStorage;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
@@ -55,7 +61,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        /// Not actually sure if this is needed to change and if this kinda fucks up everything else but this was R.layout.activity_main before
+        setContentView(binding.getRoot());
+        replaceFragment(new homeFragment());
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.settings:
+                    replaceFragment(new homeFragment());
+                    break;
+                case R.id.profile:
+                    replaceFragment(new profileFragment());
+                    break;
+                case R.id.home:
+                    replaceFragment(new settingsFragment());
+                    break;
+
+            }
+            return true;
+        });
 
         localStorage = new LocalStorage(this);
 
@@ -85,6 +109,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 //        showPrefs();
 
         restartOrEnableNotificationListenerService();
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
     }
 
     private void restartOrEnableNotificationListenerService() {

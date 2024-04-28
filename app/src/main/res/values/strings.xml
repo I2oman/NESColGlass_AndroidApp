@@ -6,4 +6,9 @@
     <string name="device_name_prev">Device Name</string>
     <string name="device_address_prev">00:00:00:00:00:00</string>
     <string name="service_name">Notification Listener Service</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_fragment">home fragment</string>
+    <string name="profile_fragment">profile fragment</string>
+    <string name="settings_fragment">settings fragment</string>
 </resources>
