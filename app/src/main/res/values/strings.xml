@@ -11,4 +11,6 @@
     <string name="home_fragment">home fragment</string>
     <string name="profile_fragment">profile fragment</string>
     <string name="settings_fragment">settings fragment</string>
+    <string name="stopwatch">Stopwatch</string>
+    <string name="timer">Timer</string>
 </resources>
