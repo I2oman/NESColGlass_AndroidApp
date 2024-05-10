@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 //    private EditText textToDisplay;
 //    private Button sentBtn;
 
-    private SettingsPage settingsPage;
+    public static SettingsPage settingsPage;
 
 
     @SuppressLint("NonConstantResourceId")
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 viewPager2.setCurrentItem(1);
                 return true;
             } else if ((item.getItemId() == R.id.menu_item_settings)) {
-                replaceFragment(settingsPage);
+                viewPager2.setCurrentItem(2);
                 return true;
             }
 

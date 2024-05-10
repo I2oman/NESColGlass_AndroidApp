@@ -17,6 +17,7 @@ import static com.example.nescolglass.Globals.STATE_LISTENING;
 import static com.example.nescolglass.Globals.STATE_MESSAGE_RECEIVED;
 import static com.example.nescolglass.Globals.STATE_MESSAGE_SENT;
 import static com.example.nescolglass.LocalStorage.putPrefs;
+import static com.example.nescolglass.MainActivity.settingsPage;
 
 
 import android.os.Handler;
@@ -29,7 +30,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class FragmentPagerAdapter extends FragmentStateAdapter {
-    private SettingsPage settingsPage;
 
     public FragmentPagerAdapter(@NonNull FragmentActivity fragment) {
         super(fragment);
@@ -43,13 +43,15 @@ public class FragmentPagerAdapter extends FragmentStateAdapter {
                 return new HomePage();
             case 1:
                 return new MapsPage();
+            case 2:
+                return settingsPage;
         }
         return null;
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 
 }
