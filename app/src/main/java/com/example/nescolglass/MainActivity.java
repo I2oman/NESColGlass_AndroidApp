@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,12 +39,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.nescolglass.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+    MenuItem previousMenuItem;
+    private FragmentPagerAdapter aFragmetnadapter;
+
+    private BottomNavigationView mBottomNavigationView;
+
+
+    private ViewPager2 viewPager2;
     ActivityMainBinding binding;
     private LocalStorage localStorage;
     private BluetoothAdapter bluetoothAdapter;
@@ -62,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 //    private EditText textToDisplay;
 //    private Button sentBtn;
 
-    private SettingsPage settingsPage;
+    public static SettingsPage settingsPage;
 
 
     @SuppressLint("NonConstantResourceId")
@@ -74,7 +87,14 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new HomePage());
+        mBottomNavigationView = binding.bottomNavigationView;
+        mBottomNavigationView.getMenu().getItem(2).setChecked(true);
+        viewPager2=findViewById(R.id.view_pager);
+        viewPager2.setAdapter(new FragmentPagerAdapter(this));
+
+
+
+
 
         localStorage = new LocalStorage(this);
 //        showPrefs();
@@ -103,19 +123,21 @@ public class MainActivity extends AppCompatActivity {
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.menu_item_home) {
-                replaceFragment(new HomePage());
+                viewPager2.setCurrentItem(0);
                 return true;
-            } else if ((item.getItemId() == R.id.menu_item_profile)) {
-                replaceFragment(new ProfilePage());
+            } else if ((item.getItemId() == R.id.menu_item_maps)) {
+                viewPager2.setCurrentItem(1);
                 return true;
             } else if ((item.getItemId() == R.id.menu_item_settings)) {
-                replaceFragment(settingsPage);
+                viewPager2.setCurrentItem(2);
                 return true;
             }
+
 
             return true;
         });
     }
+
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -123,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
     }
+
 
     private void restartOrEnableNotificationListenerService() {
         if (!isNotificationServiceEnabled()) {
@@ -283,4 +306,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
