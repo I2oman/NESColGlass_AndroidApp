@@ -32,6 +32,8 @@
         app:layout_constraintHorizontal_bias="0.934"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:cornerRadius="30dp"
+        android:textSize="20sp"
         app:layout_constraintVertical_bias="0.081" />
 
     <Button
@@ -44,6 +46,8 @@
         app:layout_constraintHorizontal_bias="0.065"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:cornerRadius="30dp"
+        android:textSize="20sp"
         app:layout_constraintVertical_bias="0.081" />
 
 
