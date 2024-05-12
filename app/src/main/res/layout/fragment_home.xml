@@ -21,22 +21,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <Button
         android:id="@+id/stopwatchButton"
         android:layout_width="167dp"
         android:layout_height="164dp"
         android:text="@string/stopwatch"
-        tools:layout_editor_absoluteX="25dp"
-        tools:layout_editor_absoluteY="36dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.934"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.081" />
 
     <Button
         android:id="@+id/timerButton"
         android:layout_width="167dp"
         android:layout_height="164dp"
         android:text="@string/timer"
-        tools:layout_editor_absoluteX="228dp"
-        tools:layout_editor_absoluteY="36dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.065"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.081" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
