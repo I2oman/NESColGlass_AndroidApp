@@ -23,5 +23,4 @@ public class Globals {
     public static final String SHARED_PREFS = "NSG_SHARED_PREFERENCES";
     public static final String CONSTART = "CONNECT_ON_STARTUP";
     public static final String LASTDEVADDR = "LAST_CONNECTED_DEVICE_ADDRESS";
-
 }

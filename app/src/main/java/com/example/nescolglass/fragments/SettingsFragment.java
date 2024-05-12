@@ -1,18 +1,11 @@
-package com.example.nescolglass;
+package com.example.nescolglass.fragments;
 
-import static androidx.core.content.ContextCompat.getSystemService;
 import static com.example.nescolglass.Globals.*;
-import static com.example.nescolglass.LocalStorage.getPrefs;
-import static com.example.nescolglass.LocalStorage.putPrefs;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +13,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -28,13 +20,19 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Set;
+import com.example.nescolglass.LocalStorage;
+import com.example.nescolglass.MainActivity;
+import com.example.nescolglass.R;
+import com.example.nescolglass.adapters.RecyclerViewInterface;
+import com.example.nescolglass.adapters.ListAdapter;
 
-public class SettingsPage extends Fragment implements RecyclerViewInterface {
+import java.util.ArrayList;
+
+public class SettingsFragment extends Fragment implements RecyclerViewInterface {
     private Context appContext;
-    private Handler handler;
+    private LocalStorage localStorage;
     private Button connecting_btn;
+    private String connecting_btn_text;
     private CheckBox constart_chkb;
     private CardView cardView;
     private ProgressBar progressBar;
@@ -47,10 +45,12 @@ public class SettingsPage extends Fragment implements RecyclerViewInterface {
     private EditText textToDisplay;
     private Button sentBtn;
 
-    public SettingsPage(Context context, Handler handler) {
+    public SettingsFragment(Context context, LocalStorage localStorage) {
         // Required empty public constructor
         this.appContext = context;
-        this.handler = handler;
+        this.localStorage = localStorage;
+
+        connecting_btn_text = "Not connected";
     }
 
     @Override
@@ -78,32 +78,32 @@ public class SettingsPage extends Fragment implements RecyclerViewInterface {
         sentBtn = view.findViewById(R.id.sentBtn);
         sentBtn.setOnClickListener(this::sent);
 
+        applyPrefs();
+
         return view;
     }
 
-    // TODO: create onSaveInstanceState method to restore button color+text after reopening tab etc.
-    //  implement applying settings from prefs on opening tab (Connect on startup checkbox)
-
     public void bondedDevices(View view) {
-//        progressBar.setVisibility(View.INVISIBLE);
-        ((MainActivity) getActivity()).disconnectDevice();
-
+        if (MainActivity.sendReceive != null) {
+            if (MainActivity.sendReceive.isConnected()) {
+                MainActivity.sendReceive.cancel();
+                return;
+            }
+        }
         if (cardView.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(View.INVISIBLE);
             cardView.setVisibility(View.INVISIBLE);
         } else {
-//            ((MainActivity) getActivity()).accessPermission();
+            ((MainActivity) getActivity()).accessPermission();
             devices.clear();
             setAddapter(devices);
             cardView.setVisibility(View.VISIBLE);
             setAddapter(devices = ((MainActivity) getActivity()).getbondedDevices());
-//            Log.i("System.out.println()", String.valueOf(devices));
-//            progressBar.setVisibility(View.VISIBLE);
-//            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onItemClick(int position) {
         ((MainActivity) getActivity()).connectDevice(devices.get(position));
@@ -119,38 +119,36 @@ public class SettingsPage extends Fragment implements RecyclerViewInterface {
     }
 
     public void constart_void(View view) {
-        putPrefs(CONSTART, constart_chkb.isChecked());
+        localStorage.putPrefs(CONSTART, constart_chkb.isChecked());
     }
 
     public void applyPrefs() {
-        constart_chkb.setChecked(getPrefs(CONSTART, Boolean.class));
-        if (constart_chkb.isChecked()) {
-            for (BluetoothDevice device : ((MainActivity) getActivity()).getbondedDevices()) {
-                if (device.getAddress().equals(getPrefs(LASTDEVADDR, String.class))) {
-                    ((MainActivity) getActivity()).connectDevice(device);
-                    break;
-                }
-            }
+        connecting_btn.setText(connecting_btn_text);
+        switch (connecting_btn_text) {
+            case "Not connected":
+                connecting_btn.setBackgroundColor(getResources().getColor(R.color.red));
+                progressBar.setVisibility(View.INVISIBLE);
+                break;
+            case "Connecting...":
+                connecting_btn.setBackgroundColor(getResources().getColor(R.color.orange));
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+            case "Connected":
+                connecting_btn.setBackgroundColor(getResources().getColor(R.color.green));
+                progressBar.setVisibility(View.INVISIBLE);
+                cardView.setVisibility(View.INVISIBLE);
+                break;
         }
+        constart_chkb.setChecked(localStorage.getPrefs(CONSTART, Boolean.class));
     }
 
-    public void showNotConnected() {
-        connecting_btn.setText("Not connected");
-        connecting_btn.setBackgroundColor(getResources().getColor(R.color.red));
-        progressBar.setVisibility(View.INVISIBLE);
-    }
+    public void setConnectinState(String state) {
+        connecting_btn_text = state;
 
-    public void showConnecting() {
-        connecting_btn.setText("Connecting...");
-        connecting_btn.setBackgroundColor(getResources().getColor(R.color.orange));
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    public void showConnected() {
-        connecting_btn.setText("Connected");
-        connecting_btn.setBackgroundColor(getResources().getColor(R.color.green));
-        progressBar.setVisibility(View.INVISIBLE);
-        cardView.setVisibility(View.INVISIBLE);
+        try {
+            applyPrefs();
+        } catch (Exception ignored) {
+        }
     }
 
     public void sent(View view) {
@@ -169,8 +167,10 @@ public class SettingsPage extends Fragment implements RecyclerViewInterface {
         formattedText += ",t:";
         formattedText += textToDisplay.getText().toString();
         formattedText += ";";
-        if (((MainActivity) getActivity()).isConnectedDevice()) {
-            MainActivity.sendReceive.write(formattedText.getBytes());
+        if (MainActivity.sendReceive != null) {
+            if (MainActivity.sendReceive.isConnected()) {
+                MainActivity.sendReceive.write(formattedText.getBytes());
+            }
         }
     }
 }
