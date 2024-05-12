@@ -6,35 +6,37 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MyNotificationListenerService extends NotificationListenerService {
     static HashMap<String, String> apps = new HashMap<String, String>();
 
     static {
-        apps.put("org.telegram.messenger", "Telegram");
-        apps.put("com.whatsapp", "WhatsApp");
-        apps.put("com.viber.voip", "Viber");
-        apps.put("com.microsoft.teams", "Teams");
-        apps.put("com.google.android.gm", "Gmail");
-        apps.put("com.microsoft.office.outlook", "Outlook");
-        apps.put("com.instagram.android", "Instagram");
-        apps.put("com.facebook.orca", "Messenger");
-        apps.put("??", "Facebook");
-        apps.put("com.discord", "Discord");
+        apps.put("org.telegram.messenger", "0");
+        apps.put("com.whatsapp", "1");
+        apps.put("com.microsoft.teams", "2");
+        apps.put("com.google.android.gm", "3");
+        apps.put("com.microsoft.office.outlook", "4");
+        apps.put("com.instagram.android", "5");
+        apps.put("com.facebook.orca", "6");
+        apps.put("com.discord", "7");
+        apps.put("com.viber.voip", "8");
+        apps.put("com.google.android.apps.messaging", "9");
+        apps.put("com.google.android.dialer", "10");
     }
 
-    @Override
-    public void onListenerConnected() {
-        StatusBarNotification[] activeNotifications = getActiveNotifications();
-        if (activeNotifications != null) {
-            for (StatusBarNotification sbn : activeNotifications) {
-                if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
-                        "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
-                    soutFullMsg(sbn);
-                }
-            }
-        }
-    }
+//    @Override
+//    public void onListenerConnected() {
+//        StatusBarNotification[] activeNotifications = getActiveNotifications();
+//        if (activeNotifications != null) {
+//            for (StatusBarNotification sbn : activeNotifications) {
+//                if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
+//                        "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
+//                    soutFullMsg(sbn);
+//                }
+//            }
+//        }
+//    }
 
     private void soutFullMsg(StatusBarNotification sbn) {
         Log.i("System.out.println()", "MSG!!!------------");
@@ -72,15 +74,48 @@ public class MyNotificationListenerService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         // Handle incoming notifications here
-        Log.i("System.out.println()", "Message handler");
+//        Log.i("System.out.println()", "Message handler");
+//
+//        if (apps.get(sbn.getPackageName()) != null) {
+//            Log.d("System.out.println()", "Package Name: " + apps.get(sbn.getPackageName()));
+//        } else {
+//            Log.d("System.out.println()", "Package Name: " + sbn.getPackageName());
+//        }
+//        Log.d("System.out.println()", "Title: " + sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE));
+//        Log.d("System.out.println()", "Text: " + sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT));
+        sentUsefulMsg(sbn);
+    }
 
+    private void sentUsefulMsg(StatusBarNotification sbn) {
+//        if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
+//                "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
         if (apps.get(sbn.getPackageName()) != null) {
-            Log.d("System.out.println()", "Package Name: " + apps.get(sbn.getPackageName()));
-        } else {
-            Log.d("System.out.println()", "Package Name: " + sbn.getPackageName());
+            CharSequence title = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
+            StringBuilder contentBuilder = new StringBuilder(Objects.requireNonNull(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT)));
+
+            String overlap = "2=";
+
+            if (title.length() > 10) {
+                overlap += "1;";
+                title = title.subSequence(0, 10);
+            } else {
+                overlap += "0;";
+            }
+
+            if (contentBuilder.length() > 15) {
+                for (int i = 15; i < contentBuilder.length(); i += 22) {
+                    contentBuilder.insert(i, "\n      ");
+                }
+            }
+
+            String formattedText = "1=" + apps.get(sbn.getPackageName()) + ";" + overlap + "3=" + title + ";4=" + contentBuilder + ";";
+            Log.d("System.out.println()", formattedText);
+            if (MainActivity.sendReceive != null) {
+                if (MainActivity.sendReceive.isConnected()) {
+                    MainActivity.sendReceive.write(formattedText.getBytes());
+                }
+            }
         }
-        Log.d("System.out.println()", "Title: " + sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE));
-        Log.d("System.out.println()", "Text: " + sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT));
     }
 
     @Override

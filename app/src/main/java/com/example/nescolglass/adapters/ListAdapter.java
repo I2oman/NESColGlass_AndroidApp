@@ -1,4 +1,4 @@
-package com.example.nescolglass;
+package com.example.nescolglass.adapters;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.nescolglass.R;
 
 import java.util.ArrayList;
 

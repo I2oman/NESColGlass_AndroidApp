@@ -1,4 +1,4 @@
-package com.example.nescolglass;
+package com.example.nescolglass.bluetooth;
 
 import static com.example.nescolglass.Globals.*;
 
@@ -6,11 +6,13 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class SendReceive extends Thread {
     private BluetoothSocket bluetoothSocket;
@@ -84,7 +86,10 @@ public class SendReceive extends Thread {
                     @Override
                     public void run() {
                         if (isConnected()) {
-                            write("Ping;".getBytes());
+                            String formattedText = "0=";
+                            formattedText += new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
+                            formattedText += ";";
+                            write(formattedText.getBytes());
                             pingHandler.postDelayed(this, 15 * 1000);
                         } else {
                             Looper.myLooper().quit();

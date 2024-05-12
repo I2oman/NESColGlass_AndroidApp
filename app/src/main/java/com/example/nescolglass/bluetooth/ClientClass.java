@@ -1,4 +1,4 @@
-package com.example.nescolglass;
+package com.example.nescolglass.bluetooth;
 
 import static com.example.nescolglass.Globals.*;
 
@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
+
+import com.example.nescolglass.MainActivity;
 
 import java.io.IOException;
 
@@ -64,15 +66,6 @@ public class ClientClass extends Thread {
             }
         }
     }
-
-
-//    public boolean isConnected() {
-//        if (socket != null) {
-//            return socket.isConnected();
-//        } else {
-//            return false;
-//        }
-//    }
 
     public void cancel() {
         try {

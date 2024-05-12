@@ -44,7 +44,7 @@ public class LocalStorage {
         }
     }
 
-    public static void showPrefs(){
+    public static void showPrefs() {
         Log.i("System.out.println()", sharedPreferences.getAll().toString());
     }
 }

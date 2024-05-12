@@ -2,14 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/orange"
-    tools:context=".HomePage">
+    tools:context=".fragments.HomeFragment">
 
 
-    <!-- Color seems to only exist in 4 forms I have no idea how to fix this. -->
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -49,6 +47,5 @@
         app:cornerRadius="30dp"
         android:textSize="20sp"
         app:layout_constraintVertical_bias="0.081" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
