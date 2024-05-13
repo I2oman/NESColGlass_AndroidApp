@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private ArrayList<Fragment> fragments;
     private BottomNavigationView bottomNavigationView;
-    private static LocalStorage localStorage;
+    public static LocalStorage localStorage;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
     public static SendReceive sendReceive;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new MapsFragment());
-        fragments.add(new SettingsFragment(this, localStorage));
+        fragments.add(new SettingsFragment());
         fragments.add(new AboutUsFragment());
 
         ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter(this, fragments);
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_home);
                         break;
                     case 1:
-                        bottomNavigationView.setSelectedItemId(R.id.menu_item_profile);
+                        bottomNavigationView.setSelectedItemId(R.id.menu_item_maps);
                         break;
                     case 2:
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_settings);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         if (menuItem.getItemId() == R.id.menu_item_home) {
             viewPager2.setCurrentItem(0);
         }
-        if (menuItem.getItemId() == R.id.menu_item_profile) {
+        if (menuItem.getItemId() == R.id.menu_item_maps) {
             viewPager2.setCurrentItem(1);
         }
         if (menuItem.getItemId() == R.id.menu_item_settings) {
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         switch (msg.what) {
             case INPUT_STREAM_DISCONNECT:
                 Log.w("System.out.println()", "Input stream was disconnected");
-//                ((SettingsPage) fragments.get(2)).showNotConnected();
+                ((HomeFragment) fragments.get(0)).setConnectinState("Not connected");
                 ((SettingsFragment) fragments.get(2)).setConnectinState("Not connected");
                 break;
             case INPUT_STREAM_FAIL:
@@ -174,19 +174,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case STATE_CONNECTING:
                 Log.i("System.out.println()", "STATE_CONNECTING");
-//                ((SettingsPage) fragments.get(2)).showConnecting();
+                ((HomeFragment) fragments.get(0)).setConnectinState("Connecting...");
                 ((SettingsFragment) fragments.get(2)).setConnectinState("Connecting...");
                 break;
             case STATE_CONNECTED:
                 Log.i("System.out.println()", "STATE_CONNECTED");
                 Toast.makeText(getApplicationContext(), "Successfully connected", Toast.LENGTH_SHORT).show();
-//                ((SettingsPage) fragments.get(2)).showConnected();
+                ((HomeFragment) fragments.get(0)).setConnectinState("Connected");
                 ((SettingsFragment) fragments.get(2)).setConnectinState("Connected");
                 localStorage.putPrefs(LASTDEVADDR, sendReceive.getADDR());
                 break;
             case STATE_CONNECTION_FAILED:
                 Toast.makeText(getApplicationContext(), "Connection FAILED", Toast.LENGTH_SHORT).show();
-//                ((SettingsPage) fragments.get(2)).showNotConnected();
+                ((HomeFragment) fragments.get(0)).setConnectinState("Not connected");
                 ((SettingsFragment) fragments.get(2)).setConnectinState("Not connected");
                 Log.e("System.out.println()", "STATE_CONNECTION_FAILED");
                 break;
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case STATE_DISCONNECTED:
                 Log.i("System.out.println()", "STATE_DISCONNECTED");
-//                ((SettingsPage) fragments.get(2)).showNotConnected();
+                ((HomeFragment) fragments.get(0)).setConnectinState("Not connected");
                 ((SettingsFragment) fragments.get(2)).setConnectinState("Not connected");
                 break;
             case STATE_DISCONNECTED_SUCCESS:

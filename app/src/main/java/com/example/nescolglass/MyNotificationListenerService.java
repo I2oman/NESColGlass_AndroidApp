@@ -87,32 +87,34 @@ public class MyNotificationListenerService extends NotificationListenerService {
     }
 
     private void sentUsefulMsg(StatusBarNotification sbn) {
-//        if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
-//                "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
-        if (apps.get(sbn.getPackageName()) != null) {
-            CharSequence title = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
-            StringBuilder contentBuilder = new StringBuilder(Objects.requireNonNull(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT)));
+        if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
+                "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
+                "android.app.Notification$CallStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
+            if (apps.get(sbn.getPackageName()) != null) {
+                CharSequence title = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
+                StringBuilder contentBuilder = new StringBuilder(Objects.requireNonNull(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT)));
 
-            String overlap = "2=";
+                String overlap = "4=";
 
-            if (title.length() > 10) {
-                overlap += "1;";
-                title = title.subSequence(0, 10);
-            } else {
-                overlap += "0;";
-            }
-
-            if (contentBuilder.length() > 15) {
-                for (int i = 15; i < contentBuilder.length(); i += 22) {
-                    contentBuilder.insert(i, "\n      ");
+                if (title.length() > 10) {
+                    overlap += "1;";
+                    title = title.subSequence(0, 10);
+                } else {
+                    overlap += "0;";
                 }
-            }
 
-            String formattedText = "1=" + apps.get(sbn.getPackageName()) + ";" + overlap + "3=" + title + ";4=" + contentBuilder + ";";
-            Log.d("System.out.println()", formattedText);
-            if (MainActivity.sendReceive != null) {
-                if (MainActivity.sendReceive.isConnected()) {
-                    MainActivity.sendReceive.write(formattedText.getBytes());
+                if (contentBuilder.length() > 15) {
+                    for (int i = 15; i < contentBuilder.length(); i += 22) {
+                        contentBuilder.insert(i, "\n      ");
+                    }
+                }
+
+                String formattedText = "3=" + apps.get(sbn.getPackageName()) + ";" + overlap + "5=" + title + ";6=" + contentBuilder + ";";
+                Log.d("System.out.println()", formattedText);
+                if (MainActivity.sendReceive != null) {
+                    if (MainActivity.sendReceive.isConnected()) {
+                        MainActivity.sendReceive.write(formattedText.getBytes());
+                    }
                 }
             }
         }

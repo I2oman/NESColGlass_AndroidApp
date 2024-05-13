@@ -11,8 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nescolglass.LocalStorage;
 import com.example.nescolglass.MainActivity;
 import com.example.nescolglass.R;
 import com.example.nescolglass.adapters.RecyclerViewInterface;
@@ -29,27 +29,18 @@ import com.example.nescolglass.adapters.ListAdapter;
 import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment implements RecyclerViewInterface {
-    private Context appContext;
-    private LocalStorage localStorage;
     private Button connecting_btn;
-    private String connecting_btn_text;
     private CheckBox constart_chkb;
+    private CheckBox shTimeOnStandByCheckBox;
+    private SeekBar notificationTimeoutSeekBar;
+    private TextView seekBarValueTextView;
     private CardView cardView;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private ArrayList<BluetoothDevice> devices = new ArrayList<>();
-    private EditText textSize;
-    private EditText xValue;
-    private EditText yValue;
-    private CheckBox inverColorCheckBox;
-    private EditText textToDisplay;
-    private Button sentBtn;
+    private String connecting_btn_text;
 
-    public SettingsFragment(Context context, LocalStorage localStorage) {
-        // Required empty public constructor
-        this.appContext = context;
-        this.localStorage = localStorage;
-
+    public SettingsFragment() {
         connecting_btn_text = "Not connected";
     }
 
@@ -67,20 +58,54 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         connecting_btn.setOnClickListener(this::bondedDevices);
         constart_chkb = view.findViewById(R.id.constart_chkb);
         constart_chkb.setOnClickListener(this::constart_void);
+        shTimeOnStandByCheckBox = view.findViewById(R.id.shTimeOnStandByCheckBox);
+        shTimeOnStandByCheckBox.setOnClickListener(this::shTimeOnStandBy);
+        notificationTimeoutSeekBar = view.findViewById(R.id.notificationTimeoutSeekBar);
+        notificationTimeoutSeekBar.setMin(5);
+        notificationTimeoutSeekBar.setMax(60);
+        seekBarValueTextView = view.findViewById(R.id.seekBarValueTextView);
+        notificationTimeoutSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Update the TextView with the current progress
+                seekBarValueTextView.setText("Seconds: " + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // No action needed here
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                MainActivity.localStorage.putPrefs(NOTIFICATIONTIMEOUT, seekBar.getProgress());
+                if (MainActivity.sendReceive != null) {
+                    if (MainActivity.sendReceive.isConnected()) {
+                        MainActivity.sendReceive.write(("2=" + seekBar.getProgress() * 1000 + ";").getBytes());
+                    }
+                }
+            }
+        });
         cardView = view.findViewById(R.id.cardView);
         progressBar = view.findViewById(R.id.progressBar);
         recyclerView = view.findViewById(R.id.recyclerView);
-        textSize = view.findViewById(R.id.textSizeET);
-        xValue = view.findViewById(R.id.xValue);
-        yValue = view.findViewById(R.id.yValue);
-        inverColorCheckBox = view.findViewById(R.id.inverColorCheckBox);
-        textToDisplay = view.findViewById(R.id.textToDisplay);
-        sentBtn = view.findViewById(R.id.sentBtn);
-        sentBtn.setOnClickListener(this::sent);
 
         applyPrefs();
 
         return view;
+    }
+
+    private void shTimeOnStandBy(View view) {
+        MainActivity.localStorage.putPrefs(SHTIMEONSTANDBY, shTimeOnStandByCheckBox.isChecked());
+        if (MainActivity.sendReceive != null) {
+            if (MainActivity.sendReceive.isConnected()) {
+                if (shTimeOnStandByCheckBox.isChecked()) {
+                    MainActivity.sendReceive.write("1=1;".getBytes());
+                } else {
+                    MainActivity.sendReceive.write("1=0;".getBytes());
+                }
+            }
+        }
     }
 
     public void bondedDevices(View view) {
@@ -96,9 +121,9 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         } else {
             ((MainActivity) getActivity()).accessPermission();
             devices.clear();
-            setAddapter(devices);
+            setAddapter(devices, view.getContext());
             cardView.setVisibility(View.VISIBLE);
-            setAddapter(devices = ((MainActivity) getActivity()).getbondedDevices());
+            setAddapter(devices = ((MainActivity) getActivity()).getbondedDevices(), view.getContext());
         }
     }
 
@@ -110,16 +135,16 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
     }
 
 
-    private void setAddapter(ArrayList<BluetoothDevice> list) {
+    private void setAddapter(ArrayList<BluetoothDevice> list, Context context) {
         ListAdapter adapter = new ListAdapter(list, (RecyclerViewInterface) this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(appContext.getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
 
     public void constart_void(View view) {
-        localStorage.putPrefs(CONSTART, constart_chkb.isChecked());
+        MainActivity.localStorage.putPrefs(CONSTART, constart_chkb.isChecked());
     }
 
     public void applyPrefs() {
@@ -139,7 +164,10 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
                 cardView.setVisibility(View.INVISIBLE);
                 break;
         }
-        constart_chkb.setChecked(localStorage.getPrefs(CONSTART, Boolean.class));
+        constart_chkb.setChecked(MainActivity.localStorage.getPrefs(CONSTART, Boolean.class));
+        shTimeOnStandByCheckBox.setChecked(MainActivity.localStorage.getPrefs(SHTIMEONSTANDBY, Boolean.class));
+        notificationTimeoutSeekBar.setProgress(MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class));
+        seekBarValueTextView.setText("Seconds: " + MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class));
     }
 
     public void setConnectinState(String state) {
@@ -148,29 +176,6 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         try {
             applyPrefs();
         } catch (Exception ignored) {
-        }
-    }
-
-    public void sent(View view) {
-        String formattedText = "s:";
-        formattedText += textSize.getText().toString();
-        formattedText += ",c:";
-        if (inverColorCheckBox.isChecked()) {
-            formattedText += "1";
-        } else {
-            formattedText += "0";
-        }
-        formattedText += ",X:";
-        formattedText += xValue.getText().toString();
-        formattedText += ",Y:";
-        formattedText += yValue.getText().toString();
-        formattedText += ",t:";
-        formattedText += textToDisplay.getText().toString();
-        formattedText += ";";
-        if (MainActivity.sendReceive != null) {
-            if (MainActivity.sendReceive.isConnected()) {
-                MainActivity.sendReceive.write(formattedText.getBytes());
-            }
         }
     }
 }

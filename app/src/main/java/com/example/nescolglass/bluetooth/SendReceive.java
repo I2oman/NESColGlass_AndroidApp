@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import com.example.nescolglass.MainActivity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,6 +56,12 @@ public class SendReceive extends Thread {
         int bytes; // bytes returned from read()
 
         startPingTimer();
+        if (MainActivity.localStorage.getPrefs(SHTIMEONSTANDBY, Boolean.class)) {
+            write("1=1;".getBytes());
+        } else {
+            write("1=0;".getBytes());
+        }
+        write(("2=" + MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class) * 1000 + ";").getBytes());
 
         // Keep listening to the InputStream until an exception occurs.
         while (true) {
