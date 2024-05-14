@@ -164,32 +164,5 @@
             app:srcCompat="@drawable/baseline_stop"
             app:tint="@color/light_blue" />
 
-
-        <Button
-            android:id="@+id/stopwatchButton1"
-            android:layout_width="167dp"
-            android:layout_height="164dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp"
-            android:text="@string/stopwatch"
-            android:textSize="20sp"
-            android:visibility="visible"
-            app:cornerRadius="30dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/timerButton1"
-            android:layout_width="167dp"
-            android:layout_height="164dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="15dp"
-            android:text="@string/timer"
-            android:textSize="20sp"
-            android:visibility="visible"
-            app:cornerRadius="30dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

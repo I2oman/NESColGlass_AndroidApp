@@ -167,7 +167,11 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         constart_chkb.setChecked(MainActivity.localStorage.getPrefs(CONSTART, Boolean.class));
         shTimeOnStandByCheckBox.setChecked(MainActivity.localStorage.getPrefs(SHTIMEONSTANDBY, Boolean.class));
         notificationTimeoutSeekBar.setProgress(MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class));
-        seekBarValueTextView.setText("Seconds: " + MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class));
+        if (MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class) >= 5) {
+            seekBarValueTextView.setText("Seconds: " + MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class));
+        } else {
+            seekBarValueTextView.setText("Seconds: 5");
+        }
     }
 
     public void setConnectinState(String state) {
