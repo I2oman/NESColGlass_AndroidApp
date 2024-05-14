@@ -22,6 +22,7 @@
     <string name="reset">Reset</string>
     <string name="delete">Delete</string>
     <string name="timer_title">Timer</string>
+    <string name="who_we_are">Who we are</string>
 
     <string-array name="hoursArray">
         <item>0</item>
