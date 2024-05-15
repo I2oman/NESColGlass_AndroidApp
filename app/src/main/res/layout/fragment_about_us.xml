@@ -3,215 +3,265 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/aboutus_fragment_background_gradient"
     tools:context=".fragments.AboutUsFragment">
 
-    <TextView
-        android:id="@+id/aboutustitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/who_we_are"
-        android:textSize="32sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.33"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-
-    <ImageView
-        android:id="@+id/image_about_us"
-        android:layout_width="350dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="15dp"
-        android:background="#40808080"
-        android:scaleType="centerCrop"
-        android:src="@drawable/aboutusimage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"
-        android:contentDescription="TODO" />
-
-    <FrameLayout
-        android:id="@+id/aboutusframelayout"
-        android:layout_width="360dp"
-        android:layout_height="420dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/aboutus_fragment_layout_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/aboutustitle">
-        <TextView
-            android:id="@+id/teammemberstext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:layout_marginStart="90dp"
-            android:layout_marginTop="145dp"
-            android:textColorHighlight="#2C3E50"
-            app:layout_constraintEnd_toEndOf="@id/aboutusframelayout"
-            app:layout_constraintStart_toStartOf="@id/aboutusframelayout"
-            app:layout_constraintTop_toBottomOf="@id/aboutusframelayout"
-            android:text="Group Members" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="360dp"
-            android:layout_height="175dp"
-            android:layout_marginTop="175dp"
-            android:src="@drawable/aboutus_fragment_highlight"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="360dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="390dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:src="@drawable/aboutus_fragment_highlight" />
-        <TextView
-            android:id="@+id/whatwedo"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="what we do"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.33" />
-
-        <ImageButton
-            android:id="@+id/oliverButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="175dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:src="@drawable/baseline_github"
-            android:contentDescription="TODO" />
-        <ImageButton
-            android:id="@+id/romanButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="225dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:src="@drawable/baseline_github"
-            android:contentDescription="TODO" />
-        <ImageButton
-            android:id="@+id/oleksanderButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="275dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:src="@drawable/baseline_github"
-            android:contentDescription="TODO" />
-
-        <ImageButton
-            android:id="@+id/bogdanButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="325dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:src="@drawable/baseline_github"
-            android:contentDescription="TODO" />
-        <ImageButton
-            android:id="@+id/projectButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="390dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:src="@drawable/baseline_github" />
-
-        <TextView
-            android:id="@+id/olivertext"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="180dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:text="Oliver Rennie" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/romantext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="230dp"
-            android:textColorHighlight="#2C3E50"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:text="Roman Hrynchak" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/oleksandertext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="280dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:text="Oleksandr Reshetnikov" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/imageAboutUsCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="#40808080"
+                    app:cardCornerRadius="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/bogdantext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="330dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:text="Bogdan-Cristian Ardeleanu" />
-        <TextView
-            android:id="@+id/producttext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="395dp"
-            app:layout_constraintEnd_toStartOf="@id/whatwedo"
-            app:layout_constraintTop_toBottomOf="@id/whatwedo"
-            android:text="Project Github Repository" />
+                    <ImageView
+                        android:id="@+id/imageAboutUs"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="TODO"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/aboutusimage"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.cardview.widget.CardView>
 
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/aboutus_fragment_layout_background"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageAboutUsCardView">
 
+                    <TextView
+                        android:id="@+id/aboutUsTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:text="@string/who_we_are"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                    <TextView
+                        android:id="@+id/whatWeDo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="15dp"
+                        android:text="@string/who_we_are_text"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/aboutUsTitle" />
 
-    </FrameLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/aboutus_fragment_highlight"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/whatWeDo">
 
+                        <TextView
+                            android:id="@+id/teamMembersText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="0dp"
+                            android:text="Group Members"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="#2C3E50"
+                            android:textSize="24sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
+                        <TextView
+                            android:id="@+id/oliverText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:text="Oliver Rennie"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/oliverButton"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/oliverButton" />
 
+                        <ImageButton
+                            android:id="@+id/oliverButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:background="@drawable/baseline_github"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="TODO"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/teamMembersText" />
+
+                        <TextView
+                            android:id="@+id/romanText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:text="Roman Hrynchak"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/romanButton"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/romanButton" />
+
+                        <ImageButton
+                            android:id="@+id/romanButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:background="@drawable/baseline_github"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="TODO"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/oliverButton" />
+
+                        <TextView
+                            android:id="@+id/oleksanderText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:text="Oleksandr Reshetnikov"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/oleksanderButton"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/oleksanderButton" />
+
+                        <ImageButton
+                            android:id="@+id/oleksanderButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:background="@drawable/baseline_github"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="TODO"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/romanButton" />
+
+                        <TextView
+                            android:id="@+id/bogdanText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:text="Bogdan-Cristian Ardeleanu"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/bogdanButton"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/bogdanButton" />
+
+                        <ImageButton
+                            android:id="@+id/bogdanButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/baseline_github"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="TODO"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/oleksanderButton" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/aboutus_fragment_highlight"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+                        <TextView
+                            android:id="@+id/productText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="0dp"
+                            android:text="Project Github Repository"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/projectButton"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/projectButton" />
+
+                        <ImageButton
+                            android:id="@+id/projectButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/baseline_github"
+                            android:backgroundTint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

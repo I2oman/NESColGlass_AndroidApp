@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -106,6 +105,10 @@ public class HomeFragment extends Fragment {
         timePickerButton.setClickable(false);
         setTimer = false;
         paused = false;
+        hour = 0;
+        minute = 0;
+        second = 0;
+        timePickerButton.setText("Select time");
     }
 
     private void timePickerBtn(View view) {
