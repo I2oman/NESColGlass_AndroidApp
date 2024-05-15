@@ -1,7 +1,6 @@
 package com.example.nescolglass.fragments;
 
-import android.app.AlertDialog;
-import android.app.TimePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.example.nescolglass.MainActivity;
 import com.example.nescolglass.R;
@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment {
     private ImageButton resetButton;
     private ImageButton stopButton;
     private String btConnectionTextView_text;
-    private int hour, mimute;
+    private int hour, minute, second;
     private boolean paused;
 
     public HomeFragment() {
@@ -109,18 +109,44 @@ public class HomeFragment extends Fragment {
     }
 
     private void timePickerBtn(View view) {
-        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int h, int m) {
-                hour = h;
-                mimute = m;
-                timePickerButton.setText(String.format(Locale.getDefault(), "00:%02d:%02d", hour, mimute));
-            }
-        };
+        Dialog timePickerDialog = new Dialog(view.getContext());
+        timePickerDialog.setContentView(R.layout.time_picker);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), AlertDialog.THEME_HOLO_DARK, onTimeSetListener, hour, mimute, true);
-        timePickerDialog.setTitle("Select time");
+        NumberPicker numpicker_hours = timePickerDialog.findViewById(R.id.numpicker_hours);
+        setNumpickerStyle(numpicker_hours, hour);
+        NumberPicker numpicker_minutes = timePickerDialog.findViewById(R.id.numpicker_minutes);
+        setNumpickerStyle(numpicker_minutes, minute);
+        NumberPicker numpicker_seconds = timePickerDialog.findViewById(R.id.numpicker_seconds);
+        setNumpickerStyle(numpicker_seconds, second);
+
+        Button dialogCancelBtn = timePickerDialog.findViewById(R.id.dialogCancelBtn);
+        dialogCancelBtn.setOnClickListener(view1 -> dialogCancelBtnVoid(view1, timePickerDialog));
+        Button dialogOkBtn = timePickerDialog.findViewById(R.id.dialogOkBtn);
+        dialogOkBtn.setOnClickListener((view1) -> dialogOkBtnVoid(view1, numpicker_hours, numpicker_minutes, numpicker_seconds, timePickerDialog));
+
         timePickerDialog.show();
+    }
+
+    private void setNumpickerStyle(NumberPicker numpickerHours, int value) {
+        numpickerHours.setMinValue(0);
+        numpickerHours.setMaxValue(99);
+        numpickerHours.setValue(value);
+    }
+
+    private void dialogOkBtnVoid(View view, NumberPicker numpicker_hour, NumberPicker numpicker_minutes, NumberPicker numpicker_seconds, Dialog timePickerDialog) {
+        hour = numpicker_hour.getValue();
+        minute = numpicker_minutes.getValue();
+        second = numpicker_seconds.getValue();
+        if (hour > 0 || minute > 0 || second > 0) {
+            timePickerButton.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, second));
+        } else {
+            timePickerButton.setText("Select time");
+        }
+        timePickerDialog.dismiss();
+    }
+
+    private void dialogCancelBtnVoid(View view, Dialog timePickerDialog) {
+        timePickerDialog.dismiss();
     }
 
     private void timerStopwatchPostRequest(View view1, int id) {
@@ -129,7 +155,7 @@ public class HomeFragment extends Fragment {
             if (!paused) {
                 if (setTimer) {
                     formattedText += "7=1;";
-                    formattedText += String.format(Locale.getDefault(), "8=00:%02d:%02d;", hour, mimute);
+                    formattedText += String.format(Locale.getDefault(), "8=%02d:%02d:%02d;", hour, minute, second);
                 } else {
                     formattedText += "7=2;";
                 }
@@ -141,7 +167,7 @@ public class HomeFragment extends Fragment {
             paused = true;
         } else if (id == R.id.resetButton) {
             if (setTimer) {
-                formattedText += String.format(Locale.getDefault(), "8=00:%02d:%02d;", hour, mimute);
+                formattedText += String.format(Locale.getDefault(), "8=%02d:%02d:%02d;", hour, minute, second);
                 paused = true;
             }
             formattedText += "9=2;";

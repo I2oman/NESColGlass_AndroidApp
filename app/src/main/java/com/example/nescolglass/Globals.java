@@ -25,4 +25,16 @@ public class Globals {
     public static final String LASTDEVADDR = "LAST_CONNECTED_DEVICE_ADDRESS";
     public static final String SHTIMEONSTANDBY = "SHOW_TIME_ON_STANDBY";
     public static final String NOTIFICATIONTIMEOUT = "NOTIFICATION_TIMEOUT";
+
+    public static final String SHTELEGRAM = "SH_SHTELEGRAM_VALUE";
+    public static final String SHWHATSAPP = "SH_SHWHATSAPP_VALUE";
+    public static final String SHTEAMS = "SH_SHTEAMS_VALUE";
+    public static final String SHGMAIL = "SH_SHGMAIL_VALUE";
+    public static final String SHOUTLOOK = "SH_SHOUTLOOK_VALUE";
+    public static final String SHINSTAGRAM = "SH_SHINSTAGRAM_VALUE";
+    public static final String SHMESSENGER = "SH_SHMESSENGER_VALUE";
+    public static final String SHDISCORD = "SH_SHDISCORD_VALUE";
+    public static final String SHVIBER = "SH_SHVIBER_VALUE";
+    public static final String SHMESSAGES = "SH_SHMESSAGES_VALUE";
+    public static final String SHPHONE = "SH_SHPHONE_VALUE";
 }

@@ -1,5 +1,7 @@
 package com.example.nescolglass;
 
+import static com.example.nescolglass.Globals.*;
+
 import android.app.Notification;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -10,6 +12,19 @@ import java.util.Objects;
 
 public class MyNotificationListenerService extends NotificationListenerService {
     static HashMap<String, String> apps = new HashMap<String, String>();
+    static String localStorageKeys[] = new String[]{
+            SHTELEGRAM,
+            SHWHATSAPP,
+            SHTEAMS,
+            SHGMAIL,
+            SHOUTLOOK,
+            SHINSTAGRAM,
+            SHMESSENGER,
+            SHDISCORD,
+            SHVIBER,
+            SHMESSAGES,
+            SHPHONE
+    };
 
     static {
         apps.put("org.telegram.messenger", "0");
@@ -91,6 +106,9 @@ public class MyNotificationListenerService extends NotificationListenerService {
                 "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
                 "android.app.Notification$CallStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
             if (apps.get(sbn.getPackageName()) != null) {
+                if (MainActivity.localStorage.getPrefs(localStorageKeys[Integer.parseInt(apps.get(sbn.getPackageName()))], Boolean.class)) {
+                    return;
+                }
                 CharSequence title = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
                 StringBuilder contentBuilder = new StringBuilder(Objects.requireNonNull(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT)));
 

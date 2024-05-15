@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.NESColGlass" parent="Base.Theme.NESColGlass" />
+
+    <style name="NumberPickerTheme" parent="">
+        <item name="android:textSize">22sp</item>
+        <item name="colorControlNormal">@color/light_blue</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
 </resources>
