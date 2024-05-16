@@ -219,7 +219,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         if (MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class) >= 5) {
             seekBarValueTextView.setText("Seconds: " + MainActivity.localStorage.getPrefs(NOTIFICATIONTIMEOUT, Integer.class));
         } else {
-            seekBarValueTextView.setText("Seconds: 5");
+            seekBarValueTextView.setText(getResources().getText(R.string.seconds_5));
         }
 
         telegramCheckBox.setChecked(!MainActivity.localStorage.getPrefs(SHTELEGRAM, Boolean.class));

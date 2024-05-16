@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +107,7 @@ public class HomeFragment extends Fragment {
         hour = 0;
         minute = 0;
         second = 0;
-        timePickerButton.setText("Select time");
+        timePickerButton.setText(getResources().getText(R.string.select_time));
     }
 
     private void timePickerBtn(View view) {
@@ -143,7 +142,7 @@ public class HomeFragment extends Fragment {
         if (hour > 0 || minute > 0 || second > 0) {
             timePickerButton.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, second));
         } else {
-            timePickerButton.setText("Select time");
+            timePickerButton.setText(getResources().getText(R.string.select_time));
         }
         timePickerDialog.dismiss();
     }
@@ -178,7 +177,7 @@ public class HomeFragment extends Fragment {
             formattedText += "9=3;";
         }
 
-        Log.d("System.out.println();", formattedText);
+//        Log.d("System.out.println();", formattedText);
         if (MainActivity.sendReceive != null) {
             if (MainActivity.sendReceive.isConnected()) {
                 MainActivity.sendReceive.write(formattedText.getBytes());

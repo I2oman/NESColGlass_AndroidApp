@@ -7,8 +7,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    private ViewPager2 viewPager2;
+    public ViewPager2 viewPager2;
     private ArrayList<Fragment> fragments;
     private BottomNavigationView bottomNavigationView;
     public static LocalStorage localStorage;
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager2 = findViewById(R.id.viewPager2);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
+        applyPrefs();
+
         fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new MapsFragment());
@@ -70,15 +74,19 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_home);
+                        viewPager2.setUserInputEnabled(true);
                         break;
                     case 1:
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_maps);
+                        viewPager2.setUserInputEnabled(false);
                         break;
                     case 2:
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_settings);
+                        viewPager2.setUserInputEnabled(true);
                         break;
                     case 3:
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_about_us);
+                        viewPager2.setUserInputEnabled(true);
                         break;
                 }
                 super.onPageSelected(position);
@@ -90,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = bluetoothManager.getAdapter();
 
         accessPermission();
-
-        applyPrefs();
 
         restartOrEnableNotificationListenerService();
     }
@@ -223,15 +229,27 @@ public class MainActivity extends AppCompatActivity {
     public void accessPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    android.Manifest.permission.BLUETOOTH_CONNECT,
+                    android.Manifest.permission.INTERNET,
+                    android.Manifest.permission.BLUETOOTH,
                     android.Manifest.permission.BLUETOOTH_SCAN,
-                    android.Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
-
+                    android.Manifest.permission.BLUETOOTH_CONNECT,
+                    android.Manifest.permission.BLUETOOTH_ADMIN,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
             }, 100);
         }
+
         if (!bluetoothAdapter.isEnabled()) {
+            // Bluetooth is disabled, prompt user to enable it
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
+        }
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // Location services are disabled, prompt user to enable them
+            Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(enableLocationIntent);
         }
     }
 
@@ -254,22 +272,5 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
         ClientClass clientClass = new ClientClass(selected_dev, handler);
         clientClass.start();
-    }
-
-    public boolean isConnectedDevice() {
-        if (sendReceive != null) {
-            if (sendReceive.isConnected()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void disconnectDevice() {
-        if (sendReceive != null) {
-            if (sendReceive.isConnected()) {
-                sendReceive.cancel();
-            }
-        }
     }
 }

@@ -35,7 +35,7 @@
                 android:id="@+id/connecting_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/red"
                 android:includeFontPadding="false"
@@ -45,7 +45,7 @@
                 android:id="@+id/constart_chkb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:text="@string/connect_on_startup_prev" />
         </LinearLayout>
@@ -88,8 +88,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layoutDirection="rtl"
-            android:text="Show time on standby"
-            android:textSize="20dp"
+            android:text="@string/show_time_on_standby"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settings_view" />
@@ -99,9 +99,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Notification timeout"
+            android:text="@string/notification_timeout"
             android:textAlignment="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shTimeOnStandByCheckBox" />
@@ -120,7 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Seconds: 5"
+            android:text="@string/seconds_5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notificationTimeoutSeekBar" />
@@ -130,9 +130,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="App alerts"
+            android:text="@string/app_alerts"
             android:textAlignment="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seekBarValueTextView" />
@@ -166,10 +166,10 @@
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Telegram"
-                        android:textSize="18dp" />
+                        android:text="@string/telegram"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/telegramCheckBox"
@@ -194,10 +194,10 @@
                         android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Whatsapp"
-                        android:textSize="18dp" />
+                        android:text="@string/whatsapp"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/whatsappCheckBox"
@@ -221,10 +221,10 @@
                         android:id="@+id/textView8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Teams"
-                        android:textSize="18dp" />
+                        android:text="@string/teams"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/teamsCheckBox"
@@ -248,10 +248,10 @@
                         android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Gmail"
-                        android:textSize="18dp" />
+                        android:text="@string/gmail"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/gmailCheckBox"
@@ -275,10 +275,10 @@
                         android:id="@+id/textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Outlook"
-                        android:textSize="18dp" />
+                        android:text="@string/outlook"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/outlookCheckBox"
@@ -302,10 +302,10 @@
                         android:id="@+id/textView11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Instagram"
-                        android:textSize="18dp" />
+                        android:text="@string/instagram"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/instagramCheckBox"
@@ -329,10 +329,10 @@
                         android:id="@+id/textView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Messenger"
-                        android:textSize="18dp" />
+                        android:text="@string/messenger"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/messengerCheckBox"
@@ -356,10 +356,10 @@
                         android:id="@+id/textView13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Discord"
-                        android:textSize="18dp" />
+                        android:text="@string/discord"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/discordCheckBox"
@@ -383,10 +383,10 @@
                         android:id="@+id/textView14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Viber"
-                        android:textSize="18dp" />
+                        android:text="@string/viber"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/viberCheckBox"
@@ -410,10 +410,10 @@
                         android:id="@+id/textView15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Messages"
-                        android:textSize="18dp" />
+                        android:text="@string/messages"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/messagesCheckBox"
@@ -438,10 +438,10 @@
                         android:id="@+id/textView16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:text="Phone"
-                        android:textSize="18dp" />
+                        android:text="@string/phone"
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/phoneCheckBox"

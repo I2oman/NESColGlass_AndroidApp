@@ -18,4 +18,5 @@
         android:id="@+id/menu_item_about_us"
         android:icon="@drawable/baseline_group"
         android:title="About Us" />
+
 </menu>

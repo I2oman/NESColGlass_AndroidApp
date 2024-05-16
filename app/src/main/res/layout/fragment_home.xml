@@ -48,9 +48,9 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Connecting..."
+            android:text="@string/connecting_prev"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="25sp"
             app:layout_constraintStart_toEndOf="@+id/btConnectionProgressBar"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,7 +74,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,34 +85,31 @@
                 android:id="@+id/timerButton"
                 android:layout_width="160dp"
                 android:layout_height="75dp"
+                android:layout_marginEnd="5dp"
                 android:backgroundTint="@color/black"
-                android:text="Timer"
+                android:text="@string/timer"
                 android:textColor="@color/white"
-                android:textSize="23dp" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:textSize="23sp" />
 
             <Button
                 android:id="@+id/stopwatchButton"
                 android:layout_width="160dp"
                 android:layout_height="75dp"
+                android:layout_marginStart="5dp"
                 android:backgroundTint="@color/light_gray"
-                android:text="Stopwatch"
+                android:text="@string/stopwatch"
                 android:textColor="@color/gray"
-                android:textSize="23dp" />
+                android:textSize="23sp" />
         </LinearLayout>
 
         <Button
             android:id="@+id/timePickerButton"
             android:layout_width="200dp"
             android:layout_height="75dp"
-            android:textSize="23dp"
             android:layout_marginTop="15dp"
             android:backgroundTint="@color/black"
-            android:text="Select time"
+            android:text="@string/select_time"
+            android:textSize="23sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -124,7 +121,7 @@
             android:layout_marginStart="-25dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/time_control_btns"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/todo"
             app:layout_constraintStart_toStartOf="@+id/timePickerButton"
             app:layout_constraintTop_toBottomOf="@+id/timePickerButton"
             app:srcCompat="@drawable/baseline_start"
@@ -137,7 +134,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/time_control_btns"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/todo"
             app:layout_constraintStart_toEndOf="@+id/startButton"
             app:layout_constraintTop_toBottomOf="@+id/timePickerButton"
             app:srcCompat="@drawable/baseline_pause"
@@ -150,7 +147,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/time_control_btns"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/todo"
             app:layout_constraintStart_toStartOf="@+id/startButton"
             app:layout_constraintTop_toBottomOf="@+id/startButton"
             app:srcCompat="@drawable/baseline_reset"
@@ -163,7 +160,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/time_control_btns"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/todo"
             app:layout_constraintStart_toEndOf="@+id/resetButton"
             app:layout_constraintTop_toBottomOf="@+id/pauseButton"
             app:srcCompat="@drawable/baseline_stop"

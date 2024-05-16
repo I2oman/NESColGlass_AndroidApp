@@ -1,19 +1,16 @@
 <resources>
     <string name="app_name">NESCol Glass</string>
-    <string name="not_connected_prev">Not connnected</string>
+    <string name="connected_prev">Connected</string>
+    <string name="connecting_prev">Connecting...</string>
+    <string name="not_connected_prev">Not connected</string>
     <string name="connect_on_startup_prev">Connect on startup</string>
     <string name="number_prev">888</string>
     <string name="device_name_prev">Device Name</string>
     <string name="device_address_prev">00:00:00:00:00:00</string>
     <string name="service_name">Notification Listener Service</string>
-    <string name="no_text"></string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="home_fragment">home fragment2</string>
-    <string name="profile_fragment">profile fragment</string>
-    <string name="settings_fragment">settings fragment</string>
     <string name="stopwatch">Stopwatch</string>
     <string name="timer">Timer</string>
+    <string name="select_time">Select time</string>
     <string name="todo">TODO</string>
     <string name="button">Button</string>
     <string name="start">Start</string>
@@ -23,6 +20,30 @@
     <string name="delete">Delete</string>
     <string name="timer_title">Timer</string>
     <string name="who_we_are">Who we are</string>
-    <string name="who_we_are_text">We are a group of four inspired college students who decided on our group college project to dream big and make a product that could be usable in the future. Driven by our shared, we set out to create to create something groundbreaking for us. A glass device that seamlessly integrates phone features in your daily life like providing you with notifications from your phone directly to your glasses, giving you directions based on where you wanna go by maps and other day to day features.</string>
-
+    <string name="who_we_are_text">We are a group of four college students that decided to dream big on our college project and create a product that could be used in the future. Driven by our shared passion for the subject of computing. We set ourselves a challenge, but we overcame it. Our Nescol glass concept device seamlessly integrates phone features in your daily life, such as sending notifications to the glasses rather than you having to look at your phone. Also features such as assisting you with directions by using our integrated map technology. Many more possibilities for implementation. The future is yet to be discovered!</string>
+    <string name="choose_start_location">Choose start location</string>
+    <string name="choode_destination">Choode destination</string>
+    <string name="start_route">Start Route</string>
+    <string name="under_development">Under Development</string>
+    <string name="show_time_on_standby">Show time on standby</string>
+    <string name="notification_timeout">Notification timeout</string>
+    <string name="seconds_5">Seconds: 5</string>
+    <string name="app_alerts">App alerts</string>
+    <string name="telegram">Telegram</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="teams">Teams</string>
+    <string name="gmail">Gmail</string>
+    <string name="outlook">Outlook</string>
+    <string name="instagram">Instagram</string>
+    <string name="messenger">Messenger</string>
+    <string name="discord">Discord</string>
+    <string name="viber">Viber</string>
+    <string name="messages">Messages</string>
+    <string name="phone">Phone</string>
+    <string name="group_members">Group Members</string>
+    <string name="oliver_rennie">Oliver Rennie</string>
+    <string name="roman_hrynchak">Roman Hrynchak</string>
+    <string name="oleksandr_reshetnikov">Oleksandr Reshetnikov</string>
+    <string name="bogdan_cristian_ardeleanu">Bogdan-Cristian Ardeleanu</string>
+    <string name="project_github_repository">Project Github Repository</string>
 </resources>
