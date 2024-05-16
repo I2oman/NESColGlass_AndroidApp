@@ -24,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
+    // UI elements
     private ConstraintLayout mainLayout;
     private GoogleMap mapFragment;
     private ConstraintLayout inProgressCover;
@@ -38,11 +39,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        // Initialize UI elements
         mainLayout = view.findViewById(R.id.mainLayout);
         mainLayout.setOnTouchListener(this::onScrollViewTouch);
-
         inProgressCover = view.findViewById(R.id.inProgressCover);
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
 
@@ -55,9 +57,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mapFragment = googleMap;
         mapFragment.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        // Request permission to access the device's location
         ((MainActivity) getActivity()).accessPermission();
         // Enable location layer of the map
-//        mapFragment.setMyLocationEnabled(true);
+        // mapFragment.setMyLocationEnabled(true);
 
         // Get last known location of the device
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -70,20 +73,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
             // Add a marker to the map at the current location
-//            mapFragment.addMarker(new MarkerOptions().position(currentLatLng).title("Your Current Location"));
+            // mapFragment.addMarker(new MarkerOptions().position(currentLatLng).title("Your Current Location"));
 
             // Move the camera to the current location with a zoom level
             mapFragment.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
         }
     }
 
+    // Method to handle touch events on the scroll view
     public boolean onScrollViewTouch(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                // Enable user input on ViewPager2 when the scroll view is touched
                 ((MainActivity) getActivity()).viewPager2.setUserInputEnabled(true);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                // Disable user input on ViewPager2 when the touch is released or cancelled
                 ((MainActivity) getActivity()).viewPager2.setUserInputEnabled(false);
                 break;
         }

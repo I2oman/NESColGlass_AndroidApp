@@ -22,7 +22,7 @@ public class SendReceive extends Thread {
     private static OutputStream outputStream;
     public Handler handler;
 
-
+    // Constructor to initialize SendReceive with BluetoothSocket and handler
     public SendReceive(BluetoothSocket socket, Handler handler) {
         this.handler = handler;
         this.bluetoothSocket = socket;
@@ -32,8 +32,7 @@ public class SendReceive extends Thread {
         try {
             tempIn = bluetoothSocket.getInputStream();
         } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.i("System.out.println()", "Error occurred when creating input stream", e);
+            // Error handling if input stream creation fails
             Message message = Message.obtain();
             message.what = INPUT_STREAM_FAIL;
             handler.sendMessage(message);
@@ -41,7 +40,7 @@ public class SendReceive extends Thread {
         try {
             tempOut = socket.getOutputStream();
         } catch (IOException e) {
-//            Log.i("System.out.println()", "Error occurred when creating output stream", e);
+            // Error handling if output stream creation fails
             Message message = Message.obtain();
             message.what = OUTPUT_STREAM_FAIL;
             handler.sendMessage(message);
@@ -51,10 +50,12 @@ public class SendReceive extends Thread {
         outputStream = tempOut;
     }
 
+    // Method to handle SendReceive thread's execution
     public void run() {
         byte[] buffer = new byte[1024];
         int bytes; // bytes returned from read()
 
+        // Start ping timer and send initial settings
         startPingTimer();
         if (MainActivity.localStorage.getPrefs(SHTIMEONSTANDBY, Boolean.class)) {
             write("1=1;".getBytes());
@@ -68,12 +69,10 @@ public class SendReceive extends Thread {
             try {
                 // Read from the InputStream.
                 bytes = inputStream.read(buffer);
-                // Send the obtained bytes to the UI activity.
-//                Log.i("System.out.println()", "bytes "+String.valueOf(bytes));
-//                Log.i("System.out.println()", "buffer "+Arrays.toString(buffer));
+                // Send the obtained bytes to the handler.
                 handler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
             } catch (IOException e) {
-//                Log.i("System.out.println()", "Input stream was disconnected", e);
+                // Error handling if input stream is disconnected
                 Message message = Message.obtain();
                 message.what = INPUT_STREAM_DISCONNECT;
                 handler.sendMessage(message);
@@ -83,6 +82,7 @@ public class SendReceive extends Thread {
         }
     }
 
+    // Method to start the ping timer
     private void startPingTimer() {
         new Thread(new Runnable() {
             @Override
@@ -93,6 +93,7 @@ public class SendReceive extends Thread {
                 pingHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        // Send ping message every 15 seconds
                         if (isConnected()) {
                             String formattedText = "0=";
                             formattedText += new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis()));
@@ -109,20 +110,20 @@ public class SendReceive extends Thread {
         }).start();
     }
 
-
+    // Method to write data to the OutputStream
     public void write(byte[] bytes) {
         try {
             outputStream.write(bytes);
             handler.obtainMessage(STATE_MESSAGE_SENT).sendToTarget();
         } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.i("System.out.println()", "Error occurred when sending data", e);
+            // Error handling if data sending fails
             Message message = Message.obtain();
             message.what = SENDING_FAILURE;
             handler.sendMessage(message);
         }
     }
 
+    // Method to get the address of the connected Bluetooth device
     public String getADDR() {
         if (bluetoothSocket != null) {
             return bluetoothSocket.getRemoteDevice().getAddress();
@@ -131,6 +132,7 @@ public class SendReceive extends Thread {
         }
     }
 
+    // Method to check if the Bluetooth socket is connected
     public boolean isConnected() {
         if (bluetoothSocket != null) {
             return bluetoothSocket.isConnected();
@@ -139,6 +141,7 @@ public class SendReceive extends Thread {
         }
     }
 
+    // Method to cancel the Bluetooth connection
     public void cancel() {
         try {
             bluetoothSocket.close();
@@ -147,7 +150,7 @@ public class SendReceive extends Thread {
             message.what = STATE_DISCONNECTED;
             handler.sendMessage(message);
         } catch (IOException e) {
-//            Log.i("System.out.println()", "Could not close the connect socket", e);
+            // Error handling if socket closing fails
             Message message = Message.obtain();
             message.what = SOCKET_CLOSING_ERROR;
             handler.sendMessage(message);

@@ -29,6 +29,7 @@ import com.example.nescolglass.adapters.ListAdapter;
 import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment implements RecyclerViewInterface {
+    // UI elements
     private Button connecting_btn;
     private CheckBox constart_chkb;
     private CheckBox shTimeOnStandByCheckBox;
@@ -52,6 +53,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
     public CheckBox messagesCheckBox;
     public CheckBox phoneCheckBox;
 
+    // Constructor
     public SettingsFragment() {
         connecting_btn_text = "Not connected";
     }
@@ -66,6 +68,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // Initialize UI elements
         connecting_btn = view.findViewById(R.id.connecting_btn);
         connecting_btn.setOnClickListener(this::bondedDevices);
         constart_chkb = view.findViewById(R.id.constart_chkb);
@@ -73,6 +76,8 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         shTimeOnStandByCheckBox = view.findViewById(R.id.shTimeOnStandByCheckBox);
         shTimeOnStandByCheckBox.setOnClickListener(this::shTimeOnStandBy);
         notificationTimeoutSeekBar = view.findViewById(R.id.notificationTimeoutSeekBar);
+
+        // Set up SeekBar
         notificationTimeoutSeekBar.setMin(5);
         notificationTimeoutSeekBar.setMax(60);
         seekBarValueTextView = view.findViewById(R.id.seekBarValueTextView);
@@ -90,6 +95,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                // Update notification timeout preference when SeekBar stops tracking touch
                 MainActivity.localStorage.putPrefs(NOTIFICATIONTIMEOUT, seekBar.getProgress());
                 if (MainActivity.sendReceive != null) {
                     if (MainActivity.sendReceive.isConnected()) {
@@ -102,6 +108,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         progressBar = view.findViewById(R.id.progressBar);
         recyclerView = view.findViewById(R.id.recyclerView);
 
+        // Set up UI
         telegramCheckBox = view.findViewById(R.id.telegramCheckBox);
         telegramCheckBox.setOnClickListener(this::appAlertCheckBoxVoid);
         whatsappCheckBox = view.findViewById(R.id.whatsappCheckBox);
@@ -125,12 +132,15 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         phoneCheckBox = view.findViewById(R.id.phoneCheckBox);
         phoneCheckBox.setOnClickListener(this::appAlertCheckBoxVoid);
 
+        // Apply saved preferences
         applyPrefs();
 
         return view;
     }
 
+    // Handle app alert checkbox clicks
     private void appAlertCheckBoxVoid(View view) {
+        // Update preferences based on checkbox states
         MainActivity.localStorage.putPrefs(SHTELEGRAM, !telegramCheckBox.isChecked());
         MainActivity.localStorage.putPrefs(SHWHATSAPP, !whatsappCheckBox.isChecked());
         MainActivity.localStorage.putPrefs(SHTEAMS, !teamsCheckBox.isChecked());
@@ -144,6 +154,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         MainActivity.localStorage.putPrefs(SHPHONE, !phoneCheckBox.isChecked());
     }
 
+    // Handle 'Show Time On Standby' checkbox click
     private void shTimeOnStandBy(View view) {
         MainActivity.localStorage.putPrefs(SHTIMEONSTANDBY, shTimeOnStandByCheckBox.isChecked());
         if (MainActivity.sendReceive != null) {
@@ -157,7 +168,9 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         }
     }
 
+    // Handle bonded devices button click
     public void bondedDevices(View view) {
+        // If connected, cancel connection; otherwise, show bonded devices
         if (MainActivity.sendReceive != null) {
             if (MainActivity.sendReceive.isConnected()) {
                 MainActivity.sendReceive.cancel();
@@ -168,6 +181,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
             progressBar.setVisibility(View.INVISIBLE);
             cardView.setVisibility(View.INVISIBLE);
         } else {
+            // Access permissions and show bonded devices
             ((MainActivity) getActivity()).accessPermission();
             devices.clear();
             setAddapter(devices, view.getContext());
@@ -176,14 +190,14 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         }
     }
 
-
+    // RecyclerViewInterface method for item click
     @SuppressLint("MissingPermission")
     @Override
     public void onItemClick(int position) {
         ((MainActivity) getActivity()).connectDevice(devices.get(position));
     }
 
-
+    // Method to set up RecyclerView adapter
     private void setAddapter(ArrayList<BluetoothDevice> list, Context context) {
         ListAdapter adapter = new ListAdapter(list, (RecyclerViewInterface) this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
@@ -192,25 +206,31 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         recyclerView.setAdapter(adapter);
     }
 
+    // Handle 'Connect on Start' checkbox click
     public void constart_void(View view) {
         MainActivity.localStorage.putPrefs(CONSTART, constart_chkb.isChecked());
     }
 
+    // Apply saved preferences
     public void applyPrefs() {
+        // Apply preferences to UI elements
         connecting_btn.setText(connecting_btn_text);
         switch (connecting_btn_text) {
             case "Not connected":
                 connecting_btn.setBackgroundColor(getResources().getColor(R.color.red));
                 progressBar.setVisibility(View.INVISIBLE);
+                constart_chkb.setEnabled(false);
                 break;
             case "Connecting...":
                 connecting_btn.setBackgroundColor(getResources().getColor(R.color.orange));
                 progressBar.setVisibility(View.VISIBLE);
+                constart_chkb.setEnabled(false);
                 break;
             case "Connected":
                 connecting_btn.setBackgroundColor(getResources().getColor(R.color.green));
                 progressBar.setVisibility(View.INVISIBLE);
                 cardView.setVisibility(View.INVISIBLE);
+                constart_chkb.setEnabled(true);
                 break;
         }
         constart_chkb.setChecked(MainActivity.localStorage.getPrefs(CONSTART, Boolean.class));
@@ -235,6 +255,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         phoneCheckBox.setChecked(!MainActivity.localStorage.getPrefs(SHPHONE, Boolean.class));
     }
 
+    // Set connection state
     public void setConnectinState(String state) {
         connecting_btn_text = state;
 

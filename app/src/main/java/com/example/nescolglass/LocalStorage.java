@@ -11,13 +11,16 @@ public class LocalStorage {
     private static SharedPreferences.Editor prefsEditor;
     private Context context;
 
+    // Constructor initializes shared preferences
     public LocalStorage(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
     }
 
+    // Method to store preferences based on key-value pairs
     public static <T> void putPrefs(String KEY, T value) {
+        // Determine the type of value and store accordingly
         if (value instanceof String) {
             prefsEditor.putString(KEY, (String) value);
         } else if (value instanceof Boolean) {
@@ -27,9 +30,10 @@ public class LocalStorage {
         } else if (value instanceof Integer) {
             prefsEditor.putInt(KEY, (Integer) value);
         }
-        prefsEditor.apply();
+        prefsEditor.apply(); // Apply changes
     }
 
+    // Method to retrieve preferences based on key and return type
     public static <T> T getPrefs(String KEY, Class<T> returnType) {
         if (returnType == String.class) {
             return (T) sharedPreferences.getString(KEY, "");
@@ -44,6 +48,7 @@ public class LocalStorage {
         }
     }
 
+    // Method to log all preferences
     public static void showPrefs() {
         Log.i("System.out.println()", sharedPreferences.getAll().toString());
     }

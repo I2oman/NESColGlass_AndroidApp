@@ -53,24 +53,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize LocalStorage
         localStorage = new LocalStorage(this);
 
         viewPager2 = findViewById(R.id.viewPager2);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        applyPrefs();
-
+        // Initialize fragments
         fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new MapsFragment());
         fragments.add(new SettingsFragment());
         fragments.add(new AboutUsFragment());
 
+        // Set up ViewPager2 with fragments
         ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter(this, fragments);
         viewPager2.setAdapter(viewPager2Adapter);
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                // Update bottom navigation selection based on ViewPager2 page change
                 switch (position) {
                     case 0:
                         bottomNavigationView.setSelectedItemId(R.id.menu_item_home);
@@ -94,14 +96,19 @@ public class MainActivity extends AppCompatActivity {
         });
         bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
 
+        // Initialize Bluetooth adapter and manager
         bluetoothManager = getSystemService(BluetoothManager.class);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
+        // Request necessary permissions and check for Bluetooth status
         accessPermission();
 
+        // Apply preferences and restart or enable notification listener service
+        applyPrefs();
         restartOrEnableNotificationListenerService();
     }
 
+    // Handle bottom navigation item selection
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.menu_item_home) {
             viewPager2.setCurrentItem(0);
@@ -118,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Restart or enable notification listener service if necessary
     private void restartOrEnableNotificationListenerService() {
         if (!isNotificationServiceEnabled()) {
             // If the notification listener service is not enabled, launch settings to enable it
@@ -129,12 +137,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Check if the notification listener service is enabled
     private boolean isNotificationServiceEnabled() {
         ComponentName cn = new ComponentName(this, MyNotificationListenerService.class);
         String flat = Settings.Secure.getString(getContentResolver(), "enabled_notification_listeners");
         return flat != null && flat.contains(cn.flattenToString());
     }
 
+    // Restart the notification listener service
     private void restartNotificationListenerService() {
         // Disable the notification listener service
         ComponentName componentName = new ComponentName(this, MyNotificationListenerService.class);
@@ -148,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 PackageManager.DONT_KILL_APP);
     }
 
+    // Apply stored preferences
     private void applyPrefs() {
         if (localStorage.getPrefs(CONSTART, Boolean.class)) {
             for (BluetoothDevice device : getbondedDevices()) {
@@ -159,7 +170,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Handler for various Bluetooth connection states
     public Handler handler = new Handler(msg -> {
+        // Handle different message types received from the Bluetooth connection handler
         switch (msg.what) {
             case INPUT_STREAM_DISCONNECT:
                 Log.w("System.out.println()", "Input stream was disconnected");
@@ -225,8 +238,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     });
 
+    // Request necessary permissions
     @SuppressLint("MissingPermission")
     public void accessPermission() {
+        // Request permissions based on Android version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     android.Manifest.permission.INTERNET,
@@ -239,20 +254,21 @@ public class MainActivity extends AppCompatActivity {
             }, 100);
         }
 
+        // Check if Bluetooth is enabled, if not prompt user to enable it
         if (!bluetoothAdapter.isEnabled()) {
-            // Bluetooth is disabled, prompt user to enable it
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
         }
 
+        // Check if location services are enabled, if not prompt user to enable them
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // Location services are disabled, prompt user to enable them
             Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(enableLocationIntent);
         }
     }
 
+    // Retrieve bonded Bluetooth devices
     @SuppressLint("MissingPermission")
     public ArrayList<BluetoothDevice> getbondedDevices() {
         ArrayList<BluetoothDevice> bondedDevices = new ArrayList<BluetoothDevice>();
@@ -265,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
         return bondedDevices;
     }
 
+    // Connect to a Bluetooth device
     @SuppressLint("MissingPermission")
     public void connectDevice(BluetoothDevice selected_dev) {
         Toast.makeText(getApplicationContext(),

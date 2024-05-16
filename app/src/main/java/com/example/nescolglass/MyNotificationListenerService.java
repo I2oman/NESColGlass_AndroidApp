@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class MyNotificationListenerService extends NotificationListenerService {
+    // HashMap to map package names to app IDs
     static HashMap<String, String> apps = new HashMap<String, String>();
+    // Array of localStorage keys corresponding to app preferences
     static String localStorageKeys[] = new String[]{
             SHTELEGRAM,
             SHWHATSAPP,
@@ -27,6 +29,7 @@ public class MyNotificationListenerService extends NotificationListenerService {
     };
 
     static {
+        // Initialize package names and app IDs
         apps.put("org.telegram.messenger", "0");
         apps.put("com.whatsapp", "1");
         apps.put("com.microsoft.teams", "2");
@@ -40,95 +43,46 @@ public class MyNotificationListenerService extends NotificationListenerService {
         apps.put("com.google.android.dialer", "10");
     }
 
-//    @Override
-//    public void onListenerConnected() {
-//        StatusBarNotification[] activeNotifications = getActiveNotifications();
-//        if (activeNotifications != null) {
-//            for (StatusBarNotification sbn : activeNotifications) {
-//                if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
-//                        "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
-//                    soutFullMsg(sbn);
-//                }
-//            }
-//        }
-//    }
-
-    private void soutFullMsg(StatusBarNotification sbn) {
-        Log.i("System.out.println()", "MSG!!!------------");
-        if (apps.get(sbn.getPackageName()) != null) {
-            Log.d("System.out.println()", "Package Name: " + apps.get(sbn.getPackageName()));
-            if (apps.get(sbn.getPackageName()).equals("Gmail")) {
-                Log.d("System.out.println()", sbn.getNotification().toString());
-            }
-        } else {
-            Log.d("System.out.println()", "Package Name: " + sbn.getPackageName());
-        }
-        soutMsg("EXTRA_TITLE", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE));
-        soutMsg("EXTRA_TEXT", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT));
-        soutMsg("EXTRA_BIG_TEXT", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT));
-        soutMsg("EXTRA_INFO_TEXT", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_INFO_TEXT));
-        soutMsg("EXTRA_SUB_TEXT", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_SUB_TEXT));
-        soutMsg("EXTRA_SUMMARY_TEXT", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT));
-        soutMsg("EXTRA_TEMPLATE", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE));
-        soutMsg("EXTRA_PEOPLE", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_PEOPLE));
-        soutMsg("EXTRA_REMOTE_INPUT_HISTORY", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_REMOTE_INPUT_HISTORY));
-        soutMsg("EXTRA_MEDIA_SESSION", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_MEDIA_SESSION));
-        soutMsg("EXTRA_LARGE_ICON", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_LARGE_ICON));
-        soutMsg("EXTRA_SMALL_ICON", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_SMALL_ICON));
-        soutMsg("EXTRA_CHANNEL_ID", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_CHANNEL_ID));
-        soutMsg("EXTRA_NOTIFICATION_ID", sbn.getNotification().extras.getCharSequence(Notification.EXTRA_NOTIFICATION_ID));
-        Log.d("System.out.println()", "");
-    }
-
-    private void soutMsg(String name, CharSequence value) {
-        if (value != null) {
-            Log.d("System.out.println()", name + ": " + value);
-        }
-    }
-
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        // Handle incoming notifications here
-//        Log.i("System.out.println()", "Message handler");
-//
-//        if (apps.get(sbn.getPackageName()) != null) {
-//            Log.d("System.out.println()", "Package Name: " + apps.get(sbn.getPackageName()));
-//        } else {
-//            Log.d("System.out.println()", "Package Name: " + sbn.getPackageName());
-//        }
-//        Log.d("System.out.println()", "Title: " + sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE));
-//        Log.d("System.out.println()", "Text: " + sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT));
-        sentUsefulMsg(sbn);
+        // Method called when a notification is posted
+        sentUsefulMsg(sbn); // Send useful message if conditions are met
     }
 
     private void sentUsefulMsg(StatusBarNotification sbn) {
+        // Check if the notification is of interest (Messaging, BigText, or CallStyle)
         if ("android.app.Notification$MessagingStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
                 "android.app.Notification$BigTextStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE)) ||
                 "android.app.Notification$CallStyle".equals(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEMPLATE))) {
             if (apps.get(sbn.getPackageName()) != null) {
+                // Check if app alert is enabled in preferences
                 if (MainActivity.localStorage.getPrefs(localStorageKeys[Integer.parseInt(apps.get(sbn.getPackageName()))], Boolean.class)) {
-                    return;
+                    return; // Exit if app alert is enabled
                 }
+                // Extract title and content from the notification
                 CharSequence title = sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
                 StringBuilder contentBuilder = new StringBuilder(Objects.requireNonNull(sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT)));
 
+                // Check and format title and content for overlap
                 String overlap = "4=";
-
                 if (title.length() > 10) {
-                    overlap += "1;";
-                    title = title.subSequence(0, 10);
+                    overlap += "1;"; // Indicate title overlap
+                    title = title.subSequence(0, 10); // Truncate title
                 } else {
-                    overlap += "0;";
+                    overlap += "0;"; // No title overlap
                 }
 
+                // Insert newlines for content if it exceeds a certain length
                 if (contentBuilder.length() > 15) {
                     for (int i = 15; i < contentBuilder.length(); i += 22) {
                         contentBuilder.insert(i, "\n      ");
                     }
                 }
 
+                // Format the message for transmission
                 String formattedText = "3=" + apps.get(sbn.getPackageName()) + ";" + overlap + "5=" + title + ";6=" + contentBuilder + ";";
                 Log.d("System.out.println()", formattedText);
+                // Send the formatted message if connected
                 if (MainActivity.sendReceive != null) {
                     if (MainActivity.sendReceive.isConnected()) {
                         MainActivity.sendReceive.write(formattedText.getBytes());
@@ -140,6 +94,6 @@ public class MyNotificationListenerService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        // Handle removed notifications here
+        // Handle removed notifications here if needed
     }
 }

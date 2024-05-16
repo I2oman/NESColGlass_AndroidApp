@@ -21,6 +21,7 @@ import com.example.nescolglass.R;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
+    // Variables for UI elements and state
     private boolean setTimer;
     private ProgressBar btConnectionProgressBar;
     private ImageView btConnectionImageView;
@@ -36,6 +37,7 @@ public class HomeFragment extends Fragment {
     private int hour, minute, second;
     private boolean paused;
 
+    // Constructor initializing default values
     public HomeFragment() {
         btConnectionTextView_text = "Not connected";
         setTimer = true;
@@ -52,6 +54,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Initialize UI elements
         btConnectionProgressBar = view.findViewById(R.id.btConnectionProgressBar);
         btConnectionImageView = view.findViewById(R.id.btConnectionImageView);
         btConnectionTextView = view.findViewById(R.id.btConnectionTextView);
@@ -77,12 +80,15 @@ public class HomeFragment extends Fragment {
         stopButton = view.findViewById(R.id.stopButton);
         stopButton.setOnClickListener((view1) -> timerStopwatchPostRequest(view1, stopButton.getId()));
 
+        // Apply stored preferences
         applyPrefs();
 
         return view;
     }
 
+    // Method to handle timer button click
     private void timerButtonVoid(View view) {
+        // Update UI for timer mode
         timerButton.setTextColor(getResources().getColor(R.color.white));
         timerButton.setBackgroundColor(getResources().getColor(R.color.black));
         stopwatchButton.setTextColor(getResources().getColor(R.color.gray));
@@ -94,7 +100,9 @@ public class HomeFragment extends Fragment {
         paused = false;
     }
 
+    // Method to handle stopwatch button click
     private void stopwatchButtonVoid(View view) {
+        // Update UI for stopwatch mode
         stopwatchButton.setTextColor(getResources().getColor(R.color.white));
         stopwatchButton.setBackgroundColor(getResources().getColor(R.color.black));
         timerButton.setTextColor(getResources().getColor(R.color.gray));
@@ -110,10 +118,13 @@ public class HomeFragment extends Fragment {
         timePickerButton.setText(getResources().getText(R.string.select_time));
     }
 
+    // Method to handle time picker button click
     private void timePickerBtn(View view) {
+        // Show time picker dialog
         Dialog timePickerDialog = new Dialog(view.getContext());
         timePickerDialog.setContentView(R.layout.time_picker);
 
+        // Initialize number pickers for hours, minutes, and seconds
         NumberPicker numpicker_hours = timePickerDialog.findViewById(R.id.numpicker_hours);
         setNumpickerStyle(numpicker_hours, hour);
         NumberPicker numpicker_minutes = timePickerDialog.findViewById(R.id.numpicker_minutes);
@@ -121,6 +132,7 @@ public class HomeFragment extends Fragment {
         NumberPicker numpicker_seconds = timePickerDialog.findViewById(R.id.numpicker_seconds);
         setNumpickerStyle(numpicker_seconds, second);
 
+        // Set click listeners for cancel and ok buttons
         Button dialogCancelBtn = timePickerDialog.findViewById(R.id.dialogCancelBtn);
         dialogCancelBtn.setOnClickListener(view1 -> dialogCancelBtnVoid(view1, timePickerDialog));
         Button dialogOkBtn = timePickerDialog.findViewById(R.id.dialogOkBtn);
@@ -129,13 +141,16 @@ public class HomeFragment extends Fragment {
         timePickerDialog.show();
     }
 
+    // Method to set number picker style
     private void setNumpickerStyle(NumberPicker numpickerHours, int value) {
         numpickerHours.setMinValue(0);
         numpickerHours.setMaxValue(99);
         numpickerHours.setValue(value);
     }
 
+    // Method to handle OK button click in time picker dialog
     private void dialogOkBtnVoid(View view, NumberPicker numpicker_hour, NumberPicker numpicker_minutes, NumberPicker numpicker_seconds, Dialog timePickerDialog) {
+        // Update selected time values
         hour = numpicker_hour.getValue();
         minute = numpicker_minutes.getValue();
         second = numpicker_seconds.getValue();
@@ -147,37 +162,45 @@ public class HomeFragment extends Fragment {
         timePickerDialog.dismiss();
     }
 
+    // Method to handle cancel button click in time picker dialog
     private void dialogCancelBtnVoid(View view, Dialog timePickerDialog) {
         timePickerDialog.dismiss();
     }
 
+    // Method to handle start, pause, reset, and stop button clicks
     private void timerStopwatchPostRequest(View view1, int id) {
         String formattedText = "";
         if (id == R.id.startButton) {
             if (!paused) {
                 if (setTimer) {
+                    // Create timer
                     formattedText += "7=1;";
                     formattedText += String.format(Locale.getDefault(), "8=%02d:%02d:%02d;", hour, minute, second);
                 } else {
+                    // Create stopwatch
                     formattedText += "7=2;";
                 }
             }
+            // Start timer or stopwatch
             formattedText += "9=1;";
             paused = false;
         } else if (id == R.id.pauseButton) {
+            // Pause timer or stopwatch
             formattedText += "9=0;";
             paused = true;
         } else if (id == R.id.resetButton) {
             if (setTimer) {
+                // Reset timer
                 formattedText += String.format(Locale.getDefault(), "8=%02d:%02d:%02d;", hour, minute, second);
                 paused = true;
             }
+            // Reset timer on Arduino
             formattedText += "9=2;";
         } else if (id == R.id.stopButton) {
             formattedText += "9=3;";
         }
 
-//        Log.d("System.out.println();", formattedText);
+        // Send formatted text to connected device
         if (MainActivity.sendReceive != null) {
             if (MainActivity.sendReceive.isConnected()) {
                 MainActivity.sendReceive.write(formattedText.getBytes());
@@ -185,6 +208,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // Method to apply stored preferences
     public void applyPrefs() {
         btConnectionTextView.setText(btConnectionTextView_text);
         switch (btConnectionTextView_text) {
@@ -205,6 +229,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // Method to set connection state
     public void setConnectinState(String state) {
         btConnectionTextView_text = state;
 
