@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
     public static SendReceive sendReceive;
+    public boolean requestedGeolocation;
 
 
     @SuppressLint("NonConstantResourceId")
@@ -260,11 +261,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, 0);
         }
 
-        // Check if location services are enabled, if not prompt user to enable them
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(enableLocationIntent);
+        // Check if location services are enabled, if not prompt user to enable them (only once)
+        if (!requestedGeolocation) {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(enableLocationIntent);
+            }
+            requestedGeolocation = true;
         }
     }
 
