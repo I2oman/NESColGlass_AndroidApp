@@ -157,6 +157,29 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp">
 
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/all_apps"
+                        android:textAlignment="center"
+                        android:textSize="19sp" />
+
+                    <CheckBox
+                        android:id="@+id/allAppsCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
                     <ImageView
                         android:id="@+id/imageView4"
                         android:layout_width="50dp"

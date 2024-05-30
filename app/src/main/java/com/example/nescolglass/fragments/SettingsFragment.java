@@ -41,6 +41,7 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
     private ArrayList<BluetoothDevice> devices = new ArrayList<>();
     private String connecting_btn_text;
 
+    public CheckBox allAppsCheckBox;
     public CheckBox telegramCheckBox;
     public CheckBox whatsappCheckBox;
     public CheckBox teamsCheckBox;
@@ -109,6 +110,8 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         recyclerView = view.findViewById(R.id.recyclerView);
 
         // Set up UI
+        allAppsCheckBox = view.findViewById(R.id.allAppsCheckBox);
+        allAppsCheckBox.setOnClickListener(this::allAppsAlertCheckBoxVoid);
         telegramCheckBox = view.findViewById(R.id.telegramCheckBox);
         telegramCheckBox.setOnClickListener(this::appAlertCheckBoxVoid);
         whatsappCheckBox = view.findViewById(R.id.whatsappCheckBox);
@@ -138,6 +141,24 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         return view;
     }
 
+    // Handle all apps alert checkbox clicks
+    private void allAppsAlertCheckBoxVoid(View view) {
+        // Update all messengers checkboxes
+        telegramCheckBox.setChecked(allAppsCheckBox.isChecked());
+        whatsappCheckBox.setChecked(allAppsCheckBox.isChecked());
+        teamsCheckBox.setChecked(allAppsCheckBox.isChecked());
+        gmailCheckBox.setChecked(allAppsCheckBox.isChecked());
+        outlookCheckBox.setChecked(allAppsCheckBox.isChecked());
+        instagramCheckBox.setChecked(allAppsCheckBox.isChecked());
+        messengerCheckBox.setChecked(allAppsCheckBox.isChecked());
+        discordCheckBox.setChecked(allAppsCheckBox.isChecked());
+        viberCheckBox.setChecked(allAppsCheckBox.isChecked());
+        messagesCheckBox.setChecked(allAppsCheckBox.isChecked());
+        phoneCheckBox.setChecked(allAppsCheckBox.isChecked());
+        // Saving changes
+        appAlertCheckBoxVoid(view);
+    }
+
     // Handle app alert checkbox clicks
     private void appAlertCheckBoxVoid(View view) {
         // Update preferences based on checkbox states
@@ -152,6 +173,16 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         MainActivity.localStorage.putPrefs(SHVIBER, !viberCheckBox.isChecked());
         MainActivity.localStorage.putPrefs(SHMESSAGES, !messagesCheckBox.isChecked());
         MainActivity.localStorage.putPrefs(SHPHONE, !phoneCheckBox.isChecked());
+
+        // Changing all apps checkbox
+        if (telegramCheckBox.isChecked() && whatsappCheckBox.isChecked() && teamsCheckBox.isChecked()
+                && gmailCheckBox.isChecked() && outlookCheckBox.isChecked() && instagramCheckBox.isChecked()
+                && messengerCheckBox.isChecked() && discordCheckBox.isChecked() && viberCheckBox.isChecked()
+                && messagesCheckBox.isChecked() && phoneCheckBox.isChecked()) {
+            allAppsCheckBox.setChecked(true);
+        } else {
+            allAppsCheckBox.setChecked(false);
+        }
     }
 
     // Handle 'Show Time On Standby' checkbox click
@@ -253,6 +284,15 @@ public class SettingsFragment extends Fragment implements RecyclerViewInterface 
         viberCheckBox.setChecked(!MainActivity.localStorage.getPrefs(SHVIBER, Boolean.class));
         messagesCheckBox.setChecked(!MainActivity.localStorage.getPrefs(SHMESSAGES, Boolean.class));
         phoneCheckBox.setChecked(!MainActivity.localStorage.getPrefs(SHPHONE, Boolean.class));
+
+        if (telegramCheckBox.isChecked() && whatsappCheckBox.isChecked() && teamsCheckBox.isChecked()
+                && gmailCheckBox.isChecked() && outlookCheckBox.isChecked() && instagramCheckBox.isChecked()
+                && messengerCheckBox.isChecked() && discordCheckBox.isChecked() && viberCheckBox.isChecked()
+                && messagesCheckBox.isChecked() && phoneCheckBox.isChecked()) {
+            allAppsCheckBox.setChecked(true);
+        } else {
+            allAppsCheckBox.setChecked(false);
+        }
     }
 
     // Set connection state

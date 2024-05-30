@@ -17,3 +17,5 @@ local.properties
 /.idea/
 /gradle/wrapper/gradle-wrapper.jar
 /secrets.properties
+/app/release/
+/key.jks
